@@ -1,0 +1,125 @@
+@use '../../styles/variables' as *;
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: $z-navbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 4rem;
+  transition: background 0.6s ease, backdrop-filter 0.6s ease, padding 0.4s ease;
+
+  &.scrolled {
+    background: rgba(5, 5, 5, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 1rem 4rem;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+  }
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  opacity: 0; // set by GSAP
+}
+
+.logoText {
+  font-family: $font-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: $color-gold;
+  text-transform: uppercase;
+}
+
+.logoSub {
+  font-family: $font-sans;
+  font-size: 0.5rem;
+  letter-spacing: 0.35em;
+  color: $color-gray;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.navLinks {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+
+  li {
+    opacity: 0; // set by GSAP
+  }
+}
+
+.navLink {
+  position: relative;
+  font-family: $font-sans;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: $color-gray-light;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $color-gold;
+  }
+
+  &:hover .navUnderline {
+    transform: scaleX(1);
+  }
+}
+
+.navUnderline {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: $color-gold;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s $transition-luxury;
+}
+
+.ctaBtn {
+  font-family: $font-sans;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: $color-bg;
+  background: $color-gold;
+  padding: 0.6rem 1.6rem;
+  border-radius: 0;
+  transition: background 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background: $color-gold-light;
+    transform: translateY(-1px);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1.2rem 1.5rem;
+
+    &.scrolled {
+      padding: 0.8rem 1.5rem;
+    }
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .ctaBtn {
+    padding: 0.5rem 1.2rem;
+  }
+}

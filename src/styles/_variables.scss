@@ -1,0 +1,22 @@
+// SCSS Design Tokens
+$color-bg: #050505;
+$color-bg-2: #0a0a0a;
+$color-gold: #c9a84c;
+$color-gold-light: #e8c97a;
+$color-gold-dark: #8b6914;
+$color-white: #ffffff;
+$color-off-white: #f0ede8;
+$color-gray: #888888;
+$color-gray-light: #bbbbbb;
+$color-glass: rgba(255, 255, 255, 0.04);
+$color-glass-border: rgba(255, 255, 255, 0.08);
+
+$font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+$font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+$transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+$transition-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+
+$z-navbar: 1000;
+$z-hero-overlay: 100;
+$z-cursor: 9999;
