@@ -5,221 +5,87 @@ import styles from './Features.module.scss'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const featuresData = [
+const cards = [
   {
-    id: 'precision',
-    number: '01',
+    icon: (
+      <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round">
+        <circle cx="16" cy="16" r="14" />
+        <circle cx="16" cy="16" r="8" strokeOpacity="0.3" />
+        <circle cx="16" cy="16" r="3" />
+        <line x1="16" y1="2" x2="16" y2="7" />
+        <line x1="16" y1="25" x2="16" y2="30" />
+        <line x1="2" y1="16" x2="7" y2="16" />
+        <line x1="25" y1="16" x2="30" y2="16" />
+      </svg>
+    ),
     title: 'Precision Movement',
-    subtitle: 'Swiss Automatic',
-    desc: 'At the heart of every REISER beats a hand-assembled automatic movement, certified by the Contrôle Officiel Suisse des Chronomètres. Accurate to ±2 seconds per day, it represents the pinnacle of horological achievement.',
-    detail: 'The movement oscillates at 28,800 vibrations per hour with a 72-hour power reserve.',
-    imageSide: 'left',
-    accent: 'Chronometer Certified',
+    desc: 'Automatic winding with 72-hour power reserve.',
   },
   {
-    id: 'craftsmanship',
-    number: '02',
-    title: 'Premium Craftsmanship',
-    subtitle: 'Hand Finished',
-    desc: 'Each case is machined from a single block of grade 5 titanium, then hand-finished by our master artisans in Geneva. The alternating brushed and polished surfaces create a dialogue between light and shadow.',
-    detail: '600+ hours of meticulous handcraft per timepiece.',
-    imageSide: 'right',
-    accent: 'Geneva Atelier',
+    icon: (
+      <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round">
+        <polygon points="16 3 19.77 8.78 26 9.68 21.5 14.2 22.54 20.48 16 17.13 9.46 20.48 10.5 14.2 6 9.68 12.23 8.78 16 3" />
+        <circle cx="16" cy="12" r="1.5" fill="currentColor" fillOpacity="0.3" />
+      </svg>
+    ),
+    title: 'Premium Materials',
+    desc: 'Grade 5 titanium with sapphire crystal display.',
   },
   {
-    id: 'water',
-    number: '03',
+    icon: (
+      <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round">
+        <path d="M16 30S7 25.5 7 18.5V9l9-3.5L25 9v9.5c0 7-9 11.5-9 11.5z" />
+        <line x1="16" y1="14" x2="16" y2="21" />
+        <line x1="12.5" y1="17.5" x2="19.5" y2="17.5" />
+      </svg>
+    ),
     title: 'Water Resistance',
-    subtitle: '300M Certified',
-    desc: 'Engineered with a triple-sealed crown and a double-layer gasket system, the REISER withstands depths of 300 metres. From boardroom to deep dive, your timepiece remains impervious.',
-    detail: 'ISO 6425 certified diving watch standard.',
-    imageSide: 'left',
-    accent: 'ISO 6425',
+    desc: '300-meter certified with triple-sealed crown.',
   },
   {
-    id: 'design',
-    number: '04',
-    title: 'Luxury Design',
-    subtitle: 'Timeless Aesthetic',
-    desc: 'The REISER dial is a study in restraint — a dome of scratch-resistant sapphire crystal reveals a sunray-brushed finish that shifts with every angle of light. Baton indices in 18K gold mark the hours.',
-    detail: 'Double anti-reflective sapphire crystal coating.',
-    imageSide: 'right',
-    accent: 'Sapphire Crystal',
+    icon: (
+      <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round">
+        <rect x="4" y="14" width="24" height="14" rx="2" />
+        <path d="M9 14V9a7 7 0 0114 0v5" />
+        <circle cx="16" cy="21" r="1.5" fill="currentColor" fillOpacity="0.3" />
+        <line x1="16" y1="22.5" x2="16" y2="25" />
+      </svg>
+    ),
+    title: 'Limited Edition',
+    desc: 'Only 500 numbered pieces produced annually.',
   },
 ]
 
-function FeatureItem({ feature, index }) {
-  const rowRef = useRef(null)
-  const imageRef = useRef(null)
-  const contentRef = useRef(null)
-  const numberRef = useRef(null)
-  const accentRef = useRef(null)
-
-  useEffect(() => {
-    const isLeft = feature.imageSide === 'left'
-    const ctx = gsap.context(() => {
-      // Image entrance
-      gsap.fromTo(imageRef.current,
-        { x: isLeft ? -60 : 60, opacity: 0, scale: 1.05 },
-        {
-          x: 0, opacity: 1, scale: 1,
-          duration: 1.2, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: rowRef.current,
-            start: 'top 75%',
-          }
-        }
-      )
-
-      // Content entrance
-      gsap.fromTo(contentRef.current,
-        { x: isLeft ? 60 : -60, opacity: 0 },
-        {
-          x: 0, opacity: 1,
-          duration: 1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: rowRef.current,
-            start: 'top 75%',
-          },
-          delay: 0.15
-        }
-      )
-
-      // Number counter effect
-      gsap.fromTo(numberRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 0.07, y: 0,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: rowRef.current,
-            start: 'top 80%',
-          }
-        }
-      )
-
-      // Accent badge
-      gsap.fromTo(accentRef.current,
-        { scaleX: 0, opacity: 0 },
-        {
-          scaleX: 1, opacity: 1,
-          duration: 0.6, ease: 'power2.out',
-          transformOrigin: 'left',
-          scrollTrigger: {
-            trigger: rowRef.current,
-            start: 'top 75%',
-          },
-          delay: 0.4
-        }
-      )
-
-      // Subtle parallax on image
-      gsap.to(imageRef.current, {
-        y: -30,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: rowRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1,
-        }
-      })
-    }, rowRef)
-
-    return () => ctx.revert()
-  }, [feature])
-
-  const isLeft = feature.imageSide === 'left'
-
-  return (
-    <div
-      ref={rowRef}
-      id={feature.id}
-      className={`${styles.featureRow} ${isLeft ? styles.imageLeft : styles.imageRight}`}
-    >
-      {/* Large background number */}
-      <span ref={numberRef} className={styles.bgNumber}>{feature.number}</span>
-
-      {/* Image */}
-      <div ref={imageRef} className={styles.featureImageWrap}>
-        <div className={styles.featureImageInner}>
-          <img
-            src={`/images/feature-${feature.id}.jpg`}
-            alt={feature.title}
-            className={styles.featureImage}
-            loading="lazy"
-          />
-          <div className={styles.imageSheen} />
-        </div>
-        <div className={styles.imageAccentLine} />
-      </div>
-
-      {/* Content */}
-      <div ref={contentRef} className={styles.featureContent}>
-        <div className={styles.featureNumber}>{feature.number}</div>
-
-        <div ref={accentRef} className={styles.accentBadge}>
-          <span className={styles.accentLine} />
-          <span className={styles.accentText}>{feature.accent}</span>
-        </div>
-
-        <p className={styles.featureSubtitle}>{feature.subtitle}</p>
-        <h3 className={styles.featureTitle}>{feature.title}</h3>
-
-        <p className={styles.featureDesc}>{feature.desc}</p>
-
-        <div className={styles.detailBox}>
-          <span className={styles.detailIcon}>◈</span>
-          <p className={styles.detailText}>{feature.detail}</p>
-        </div>
-
-        <button className={styles.learnMore}>
-          <span className={styles.learnMoreLine} />
-          <span>Learn More</span>
-        </button>
-      </div>
-    </div>
-  )
-}
-
 export default function Features() {
   const sectionRef = useRef(null)
-  const headerRef = useRef(null)
+  const cardsRef = useRef([])
 
   useEffect(() => {
-    gsap.fromTo(headerRef.current,
-      { y: 50, opacity: 0 },
-      {
-        y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 85%',
-        }
-      }
-    )
+    const ctx = gsap.context(() => {
+      cardsRef.current.forEach((card, i) => {
+        if (!card) return
+        gsap.fromTo(card,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 85%' }, delay: i * 0.1 }
+        )
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
   }, [])
 
   return (
-    <section id="features" ref={sectionRef} className={styles.features}>
-      <div ref={headerRef} className={styles.sectionHeader}>
-        <div className={styles.eyebrow}>
-          <span className={styles.eyebrowLine} />
-          <span>The Details</span>
-          <span className={styles.eyebrowLine} />
-        </div>
-        <h2 className={styles.sectionTitle}>
-          Crafted with<br /><em>Obsession</em>
-        </h2>
-        <p className={styles.sectionDesc}>
-          Every facet of the REISER has been considered, reconsidered,
-          and perfected. These are not mere features — they are the
-          characteristics of a watch that defines a legacy.
-        </p>
-      </div>
-
-      <div className={styles.featuresList}>
-        {featuresData.map((feature, i) => (
-          <FeatureItem key={feature.id} feature={feature} index={i} />
+    <section id="features" ref={sectionRef} className={styles.section}>
+      <div className={styles.bgGlow} />
+      <div className={styles.grid}>
+        {cards.map((card, i) => (
+          <div key={card.title} ref={el => cardsRef.current[i] = el} className={styles.card}>
+            <div className={styles.cardGlow} />
+            <div className={styles.cardIcon}>{card.icon}</div>
+            <h3 className={styles.cardTitle}>{card.title}</h3>
+            <p className={styles.cardDesc}>{card.desc}</p>
+          </div>
         ))}
       </div>
     </section>

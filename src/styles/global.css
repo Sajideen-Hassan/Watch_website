@@ -6,19 +6,20 @@
 }
 
 :root {
-  --color-bg: #050505;
-  --color-gold: #c9a84c;
-  --color-gold-light: #e8c97a;
-  --color-white: #ffffff;
-  --color-off-white: #f0ede8;
-  --color-gray: #888888;
+  --color-bg: #0B0C10;
+  --color-bg-2: #111827;
+  --color-gold: #C8A85D;
+  --color-gold-light: #D4B96A;
+  --color-white: #FFFFFF;
+  --color-off-white: #EDEDED;
+  --color-gray: #A1A1AA;
   --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html {
   font-size: 16px;
-  scroll-behavior: auto; /* Lenis handles smooth scroll */
+  scroll-behavior: auto;
 }
 
 body {
@@ -30,9 +31,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  body {
-    cursor: auto;
-  }
+  body { cursor: auto; }
 }
 
 a {
@@ -56,14 +55,6 @@ button {
   button { cursor: pointer; }
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-::-webkit-scrollbar-thumb {
-  background: #c9a84c;
-  border-radius: 2px;
-}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0B0C10; }
+::-webkit-scrollbar-thumb { background: #C8A85D; border-radius: 2px; }

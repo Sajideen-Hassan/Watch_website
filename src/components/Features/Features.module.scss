@@ -1,320 +1,94 @@
 @use '../../styles/variables' as *;
 
-.features {
+.section {
   position: relative;
   background: $color-bg;
-  padding: 8rem 0 12rem;
+  padding: 8rem 2rem;
   overflow: hidden;
 }
 
-// ─── Header ───────────────────────────────────────────────────────────────────
-
-.sectionHeader {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto 8rem;
-  padding: 0 2rem;
-  opacity: 0; // GSAP
-  will-change: transform, opacity;
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  font-family: $font-sans;
-  font-size: 0.65rem;
-  letter-spacing: 0.4em;
-  color: $color-gold;
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-}
-
-.eyebrowLine {
-  display: block;
-  width: 40px;
-  height: 1px;
-  background: $color-gold;
-  opacity: 0.5;
-}
-
-.sectionTitle {
-  font-family: $font-serif;
-  font-size: clamp(2.5rem, 4vw, 4rem);
-  font-weight: 300;
-  color: $color-off-white;
-  line-height: 1.15;
-  margin-bottom: 1.5rem;
-
-  em {
-    font-style: italic;
-    color: $color-gold;
-  }
-}
-
-.sectionDesc {
-  font-family: $font-sans;
-  font-size: 0.9rem;
-  font-weight: 300;
-  color: $color-gray;
-  line-height: 1.9;
-}
-
-// ─── Feature Row ──────────────────────────────────────────────────────────────
-
-.featuresList {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.featureRow {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 600px;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: rgba(255,255,255,0.04);
-  }
-}
-
-.imageLeft {
-  .featureImageWrap { order: 1; }
-  .featureContent { order: 2; }
-}
-
-.imageRight {
-  .featureImageWrap { order: 2; }
-  .featureContent { order: 1; }
-}
-
-// ─── Image ────────────────────────────────────────────────────────────────────
-
-.featureImageWrap {
-  position: relative;
-  overflow: hidden;
-  will-change: transform, opacity;
-}
-
-.featureImageInner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 600px;
-  will-change: transform;
-}
-
-.featureImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s $transition-luxury;
-
-  .featureRow:hover & {
-    transform: scale(1.03);
-  }
-}
-
-.imageSheen {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(201, 168, 76, 0.04) 0%,
-    transparent 50%,
-    rgba(5, 5, 5, 0.3) 100%
-  );
-  pointer-events: none;
-}
-
-.imageAccentLine {
-  position: absolute;
-  left: 0;
-  top: 10%;
-  bottom: 10%;
-  width: 3px;
-  background: linear-gradient(to bottom, transparent, $color-gold, transparent);
-  opacity: 0.4;
-
-  .imageRight & {
-    left: auto;
-    right: 0;
-  }
-}
-
-// ─── Content ──────────────────────────────────────────────────────────────────
-
-.featureContent {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 5rem 6rem;
-  background: #070707;
-  will-change: transform, opacity;
-}
-
-.bgNumber {
+.bgGlow {
   position: absolute;
   top: 50%;
-  right: -0.1em;
-  transform: translateY(-50%);
-  font-family: $font-serif;
-  font-size: 18rem;
-  font-weight: 700;
-  color: $color-white;
-  opacity: 0.07;
-  line-height: 1;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba($color-gold, 0.03) 0%, transparent 70%);
   pointer-events: none;
-  user-select: none;
-  will-change: transform, opacity;
+}
 
-  .imageRight & {
-    right: auto;
-    left: -0.1em;
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+
+.card {
+  position: relative;
+  padding: 2.5rem 2rem;
+  background: $color-glass;
+  border: 1px solid $color-glass-border;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: border-color 0.5s $transition-luxury, background 0.5s $transition-luxury, transform 0.6s $transition-luxury;
+  will-change: transform, opacity;
+  cursor: default;
+
+  &:hover {
+    background: rgba($color-bg-2, 0.6);
+    border-color: rgba($color-gold, 0.25);
+    transform: scale(1.02);
+
+    .cardIcon { color: $color-gold; }
+    .cardGlow { opacity: 1; }
   }
 }
 
-.featureNumber {
-  font-family: $font-sans;
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  color: $color-gold;
-  opacity: 0.5;
-  margin-bottom: 1.5rem;
-}
-
-.accentBadge {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  will-change: transform, opacity;
-}
-
-.accentLine {
-  display: block;
-  width: 30px;
+.cardGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 1px;
-  background: $color-gold;
+  background: linear-gradient(to right, transparent, rgba($color-gold, 0.25), transparent);
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.accentText {
-  font-family: $font-sans;
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: $color-gold;
+.cardIcon {
+  color: rgba($color-gold, 0.3);
+  margin-bottom: 1.25rem;
+  transition: color 0.5s $transition-luxury;
 }
 
-.featureSubtitle {
-  font-family: $font-sans;
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: $color-gray;
-  margin-bottom: 0.75rem;
-}
-
-.featureTitle {
+.cardTitle {
   font-family: $font-serif;
-  font-size: clamp(1.8rem, 3vw, 2.8rem);
-  font-weight: 300;
+  font-size: 1.25rem;
+  font-weight: 400;
   color: $color-off-white;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
+  line-height: 1.3;
+  margin-bottom: 0.6rem;
 }
 
-.featureDesc {
-  font-family: $font-sans;
-  font-size: 0.88rem;
-  font-weight: 300;
-  color: $color-gray;
-  line-height: 1.9;
-  margin-bottom: 2rem;
-}
-
-.detailBox {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 1.2rem;
-  background: $color-glass;
-  border: 1px solid $color-glass-border;
-  margin-bottom: 2rem;
-}
-
-.detailIcon {
-  color: $color-gold;
-  flex-shrink: 0;
-}
-
-.detailText {
+.cardDesc {
   font-family: $font-sans;
   font-size: 0.78rem;
   font-weight: 300;
-  color: $color-gray-light;
+  color: $color-gray;
   line-height: 1.6;
-}
-
-.learnMore {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-family: $font-sans;
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: $color-gold;
-  transition: gap 0.3s ease;
-
-  &:hover {
-    gap: 1.5rem;
-
-    .learnMoreLine { width: 50px; }
-  }
-}
-
-.learnMoreLine {
-  display: block;
-  width: 30px;
-  height: 1px;
-  background: $color-gold;
-  transition: width 0.4s $transition-luxury;
 }
 
 // ─── Responsive ───────────────────────────────────────────────────────────────
 
-@media (max-width: 900px) {
-  .featureRow {
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
+@media (max-width: 700px) {
+  .section { padding: 5rem 1.25rem; }
 
-  .imageLeft,
-  .imageRight {
-    .featureImageWrap { order: 1; }
-    .featureContent { order: 2; }
-  }
+  .grid { grid-template-columns: 1fr; }
 
-  .featureImageInner {
-    min-height: 350px;
-  }
-
-  .featureContent {
-    padding: 3rem 2rem;
-  }
-
-  .bgNumber {
-    display: none;
-  }
+  .card { padding: 2rem 1.5rem; }
 }

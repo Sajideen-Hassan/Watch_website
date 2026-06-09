@@ -5,166 +5,52 @@ import styles from './About.module.scss'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const specs = [
-  { value: '300', unit: 'M', label: 'Water Resistant' },
-  { value: '72', unit: 'H', label: 'Power Reserve' },
-  { value: '28', unit: 'K', label: 'Vibrations / Hour' },
-  { value: '38', unit: 'MM', label: 'Case Diameter' },
+const points = [
+  'Swiss-inspired precision engineering',
+  'Scratch-resistant sapphire crystal',
+  '300-meter water resistance',
+  'Limited edition craftsmanship',
 ]
-
-const features = [
-  {
-    icon: '◈',
-    title: 'Precision Movement',
-    desc: 'Swiss-certified automatic movement with 28,800 vibrations per hour for unparalleled accuracy.'
-  },
-  {
-    icon: '◇',
-    title: 'Sapphire Crystal',
-    desc: 'Scratch-resistant sapphire crystal with anti-reflective coating on both sides.'
-  },
-  {
-    icon: '◉',
-    title: 'Premium Materials',
-    desc: 'Grade 5 titanium case paired with a hand-stitched alligator leather strap.'
-  },
-  {
-    icon: '◌',
-    title: 'Elegant Design',
-    desc: 'Timeless silhouette refined over three generations of master watchmakers.'
-  },
-]
-
-function Counter({ value, unit }) {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    ScrollTrigger.create({
-      trigger: ref.current,
-      start: 'top 85%',
-      once: true,
-      onEnter: () => {
-        const target = parseInt(value)
-        const obj = { val: 0 }
-        gsap.to(obj, {
-          val: target,
-          duration: 2,
-          ease: 'power2.out',
-          onUpdate: function () {
-            if (ref.current) {
-              ref.current.textContent = Math.round(obj.val) + unit
-            }
-          }
-        })
-      }
-    })
-  }, [value, unit])
-
-  return <span ref={ref}>0{unit}</span>
-}
 
 export default function About() {
   const sectionRef = useRef(null)
   const imageRef = useRef(null)
   const imageWrapRef = useRef(null)
   const headingRef = useRef(null)
-  const linesRef = useRef([])
-  const specsRef = useRef([])
-  const featuresRef = useRef([])
-  const decorRef = useRef(null)
+  const lineRef = useRef(null)
+  const pointsRef = useRef([])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Image entrance with parallax
       gsap.fromTo(imageWrapRef.current,
-        { x: -80, opacity: 0 },
-        {
-          x: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-          }
-        }
+        { x: -60, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.4, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
       )
 
-      // Parallax on image as you scroll
       gsap.to(imageRef.current, {
-        y: -60,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1,
-        }
+        y: -40, ease: 'none',
+        scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: 1.5 }
       })
 
-      // Decorative element float
-      gsap.to(decorRef.current, {
-        y: -20,
-        repeat: -1,
-        yoyo: true,
-        duration: 4,
-        ease: 'sine.inOut'
-      })
-
-      // Heading reveal
-      gsap.fromTo(headingRef.current,
-        { y: 50, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: headingRef.current,
-            start: 'top 85%',
-          }
-        }
+      gsap.fromTo(lineRef.current,
+        { scaleX: 0, opacity: 0 },
+        { scaleX: 1, opacity: 1, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' }, delay: 0.2 }
       )
 
-      // Text lines stagger
-      linesRef.current.forEach((line, i) => {
-        if (!line) return
-        gsap.fromTo(line,
-          { y: 30, opacity: 0 },
-          {
-            y: 0, opacity: 1, duration: 0.8, ease: 'power2.out',
-            scrollTrigger: {
-              trigger: line,
-              start: 'top 90%',
-            },
-            delay: i * 0.1
-          }
-        )
-      })
+      gsap.fromTo(headingRef.current,
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: headingRef.current, start: 'top 80%' }, delay: 0.3 }
+      )
 
-      // Specs stagger
-      specsRef.current.forEach((spec, i) => {
-        if (!spec) return
-        gsap.fromTo(spec,
-          { y: 30, opacity: 0 },
-          {
-            y: 0, opacity: 1, duration: 0.7, ease: 'power2.out',
-            scrollTrigger: {
-              trigger: spec,
-              start: 'top 90%',
-            },
-            delay: i * 0.12
-          }
-        )
-      })
-
-      // Feature cards stagger
-      featuresRef.current.forEach((card, i) => {
-        if (!card) return
-        gsap.fromTo(card,
-          { y: 40, opacity: 0 },
-          {
-            y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 90%',
-            },
-            delay: i * 0.1
-          }
+      pointsRef.current.forEach((pt, i) => {
+        if (!pt) return
+        gsap.fromTo(pt,
+          { x: -20, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.7, ease: 'power2.out',
+            scrollTrigger: { trigger: pt, start: 'top 90%' }, delay: i * 0.12 }
         )
       })
     }, sectionRef)
@@ -173,79 +59,29 @@ export default function About() {
   }, [])
 
   return (
-    <section id="about" ref={sectionRef} className={styles.about}>
+    <section id="about" ref={sectionRef} className={styles.section}>
       <div className={styles.container}>
-
-        {/* Left – Image */}
-        <div ref={imageWrapRef} className={styles.imageWrapper}>
+        <div ref={imageWrapRef} className={styles.imageWrap}>
           <div ref={imageRef} className={styles.imageInner}>
-            <img
-              src="/images/watch-about.jpg"
-              alt="REISER watch detail"
-              className={styles.watchImage}
-              loading="lazy"
-            />
-            <div className={styles.imageFrame} />
-          </div>
-
-          {/* Floating decorative elements */}
-          <div ref={decorRef} className={styles.decorCircle} />
-          <div className={styles.decorDot} />
-          <div className={styles.yearBadge}>
-            <span className={styles.yearNum}>1967</span>
-            <span className={styles.yearLabel}>Est.</span>
+            <img src="/images/watch-about.jpg" alt="REISER watch" className={styles.image} loading="lazy" />
+            <div className={styles.imageGlow} />
           </div>
         </div>
 
-        {/* Right – Content */}
         <div className={styles.content}>
-          <div className={styles.eyebrow}>
-            <span className={styles.eyebrowLine} />
-            <span>The Craft</span>
-          </div>
-
+          <div ref={lineRef} className={styles.goldLine} />
           <h2 ref={headingRef} className={styles.heading}>
-            Engineered for<br />
-            <em>Perfection</em>
+            Precision<br /><em>Reimagined</em>
           </h2>
 
-          <p ref={el => linesRef.current[0] = el} className={styles.lead}>
-            The REISER is not merely a timepiece. It is the culmination of
-            decades of horological mastery — a marriage of Swiss precision
-            engineering and timeless aesthetic philosophy.
-          </p>
-
-          <p ref={el => linesRef.current[1] = el} className={styles.body}>
-            Crafted from grade 5 titanium and finished by hand in our Geneva
-            atelier, every REISER represents over 600 hours of meticulous
-            workmanship. The automatic movement beats at the heart of a watch
-            designed to outlast generations.
-          </p>
-
-          {/* Specs grid */}
-          <div className={styles.specs}>
-            {specs.map((s, i) => (
-              <div key={s.label} ref={el => specsRef.current[i] = el} className={styles.specItem}>
-                <span className={styles.specValue}>
-                  <Counter value={s.value} unit={s.unit} />
-                </span>
-                <span className={styles.specLabel}>{s.label}</span>
-              </div>
+          <ul className={styles.points}>
+            {points.map((pt, i) => (
+              <li key={pt} ref={el => pointsRef.current[i] = el} className={styles.point}>
+                <span className={styles.pointBullet} />
+                <span>{pt}</span>
+              </li>
             ))}
-          </div>
-
-          {/* Feature mini-cards */}
-          <div className={styles.featureGrid}>
-            {features.map((f, i) => (
-              <div key={f.title} ref={el => featuresRef.current[i] = el} className={styles.featureCard}>
-                <span className={styles.featureIcon}>{f.icon}</span>
-                <div>
-                  <h4 className={styles.featureTitle}>{f.title}</h4>
-                  <p className={styles.featureDesc}>{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          </ul>
         </div>
       </div>
     </section>

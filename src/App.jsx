@@ -4,8 +4,10 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navbar from './components/Navbar/Navbar'
 import Hero from './components/Hero/Hero'
+import BrandIntro from './components/BrandIntro/BrandIntro'
 import About from './components/About/About'
 import Features from './components/Features/Features'
+import Experience from './components/Experience/Experience'
 import BuySection from './components/BuySection/BuySection'
 import Footer from './components/Footer/Footer'
 import CustomCursor from './components/CustomCursor/CustomCursor'
@@ -16,7 +18,6 @@ function App() {
   const lenisRef = useRef(null)
 
   useEffect(() => {
-    // Initialize Lenis smooth scroll
     const lenis = new Lenis({
       duration: 2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -26,7 +27,6 @@ function App() {
 
     lenisRef.current = lenis
 
-    // Connect Lenis to GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update)
 
     gsap.ticker.add((time) => {
@@ -47,8 +47,10 @@ function App() {
       <Navbar />
       <main>
         <Hero />
+        <BrandIntro />
         <About />
         <Features />
+        <Experience />
         <BuySection />
       </main>
       <Footer />

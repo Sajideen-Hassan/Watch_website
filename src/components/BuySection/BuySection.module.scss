@@ -1,50 +1,31 @@
 @use '../../styles/variables' as *;
 
-.buy {
+.section {
   position: relative;
-  background: $color-bg-2;
-  padding: 12rem 2rem;
+  background: $color-bg;
+  padding: 10rem 2rem;
   text-align: center;
   overflow: hidden;
-  border-top: 1px solid rgba(255,255,255,0.04);
 }
 
-// ─── Ambient Glow ─────────────────────────────────────────────────────────────
+.bgGradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 40% at 50% 50%, rgba($color-gold, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
 
 .glow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba($color-gold, 0.06) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   will-change: transform, opacity;
-}
-
-// ─── Background Lines ─────────────────────────────────────────────────────────
-
-.bgLines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.bgLine {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(201, 168, 76, 0.04),
-    transparent
-  );
-  left: calc(15% + var(--i) * 17.5%);
 }
 
 // ─── Content ──────────────────────────────────────────────────────────────────
@@ -52,60 +33,20 @@
 .content {
   position: relative;
   z-index: 2;
-  max-width: 750px;
+  max-width: 550px;
   margin: 0 auto;
-}
-
-// ─── Price ────────────────────────────────────────────────────────────────────
-
-.priceTag {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 1.5rem;
-  margin-bottom: 2.5rem;
-  opacity: 0; // GSAP
-  will-change: transform, opacity;
 }
-
-.priceLine {
-  display: block;
-  flex: 1;
-  max-width: 80px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, $color-gold);
-
-  &:last-child {
-    background: linear-gradient(to left, transparent, $color-gold);
-  }
-}
-
-.priceFrom {
-  font-family: $font-sans;
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: $color-gray;
-}
-
-.priceValue {
-  font-family: $font-serif;
-  font-size: 2rem;
-  font-weight: 300;
-  color: $color-gold;
-  letter-spacing: 0.05em;
-}
-
-// ─── Heading ──────────────────────────────────────────────────────────────────
 
 .heading {
   font-family: $font-serif;
-  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
   font-weight: 300;
   color: $color-off-white;
   line-height: 1.1;
-  margin-bottom: 2rem;
-  opacity: 0; // GSAP
   will-change: transform, opacity;
 
   em {
@@ -118,44 +59,13 @@
   }
 }
 
-// ─── Text ─────────────────────────────────────────────────────────────────────
-
 .text {
   font-family: $font-sans;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 300;
   color: $color-gray;
-  line-height: 1.9;
-  margin-bottom: 2.5rem;
-  opacity: 0; // GSAP
+  line-height: 1.6;
   will-change: transform, opacity;
-}
-
-// ─── Pills ────────────────────────────────────────────────────────────────────
-
-.pills {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 3.5rem;
-}
-
-.pill {
-  font-family: $font-sans;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: $color-gold;
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  padding: 0.5rem 1.2rem;
-  border-radius: 0;
-  transition: background 0.3s, border-color 0.3s;
-
-  &:hover {
-    background: rgba(201, 168, 76, 0.08);
-    border-color: rgba(201, 168, 76, 0.5);
-  }
 }
 
 // ─── Buttons ──────────────────────────────────────────────────────────────────
@@ -165,12 +75,11 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  margin-bottom: 3rem;
-  opacity: 0; // GSAP
+  margin-top: 1.5rem;
   will-change: transform, opacity;
 }
 
-.buyNow {
+.buyBtn {
   position: relative;
   overflow: hidden;
   font-family: $font-sans;
@@ -180,12 +89,10 @@
   color: $color-bg;
   background: linear-gradient(135deg, $color-gold-dark, $color-gold, $color-gold-light);
   padding: 1.2rem 3rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
   will-change: transform;
 
-  &:hover {
-    box-shadow: 0 20px 50px rgba(201, 168, 76, 0.4);
-  }
+  &:hover { box-shadow: 0 15px 40px rgba($color-gold, 0.3); }
 }
 
 .btnSheen {
@@ -199,12 +106,10 @@
   pointer-events: none;
   transition: left 0.6s ease;
 
-  .buyNow:hover & {
-    left: 125%;
-  }
+  .buyBtn:hover & { left: 125%; }
 }
 
-.btnText {
+.btnInner {
   position: relative;
   display: flex;
   align-items: center;
@@ -219,59 +124,24 @@
   font-size: 0.8rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: $color-gray-light;
-  border: 1px solid rgba(255,255,255,0.12);
+  color: $color-gray;
+  border: 1px solid rgba(255,255,255,0.1);
   padding: 1.2rem 2.5rem;
   transition: color 0.3s ease, border-color 0.3s ease;
   will-change: transform;
 
   &:hover {
     color: $color-gold;
-    border-color: rgba(201, 168, 76, 0.4);
+    border-color: rgba($color-gold, 0.3);
   }
 }
 
-// ─── Trust ────────────────────────────────────────────────────────────────────
-
-.trust {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.trustItem {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: $font-sans;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  color: $color-gray;
-}
-
-.trustIcon {
-  color: $color-gold;
-  font-size: 0.8rem;
-}
-
-.trustDivider {
-  width: 1px;
-  height: 20px;
-  background: rgba(255,255,255,0.1);
-}
+// ─── Responsive ───────────────────────────────────────────────────────────────
 
 @media (max-width: 600px) {
-  .buttons {
-    flex-direction: column;
-  }
+  .section { padding: 6rem 1.5rem; }
 
-  .trust {
-    flex-direction: column;
-    gap: 1rem;
-  }
+  .buttons { flex-direction: column; width: 100%; }
 
-  .trustDivider {
-    display: none;
-  }
+  .buyBtn, .contactBtn { width: 100%; justify-content: center; }
 }
