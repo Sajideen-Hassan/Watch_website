@@ -17,6 +17,7 @@
   right: 0;
   height: 100vh;
   z-index: 1;
+  will-change: transform;
 }
 
 .canvas {
@@ -242,15 +243,12 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .diagnosticsPanel { display: none; }
+}
+
 @media (max-width: 768px) {
-  .diagnosticsPanel {
-    bottom: auto;
-    top: 4.5rem;
-    left: 0.75rem;
-    padding: 0.5rem 0.65rem;
-    min-width: 130px;
-    font-size: 0.55rem;
-  }
+  .canvasWrapper { height: 100vh; height: calc(var(--vh, 1vh) * 100); }
 
   .loaderPct { font-size: 2.25rem; }
 
@@ -258,4 +256,14 @@
     right: 0.75rem;
     .frameNumber { font-size: 1.25rem; }
   }
+
+  .scrollText { font-size: clamp(0.75rem, 3vw, 1rem); }
+  .scrollIndicator { gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .loaderPct { font-size: 1.75rem; }
+  .loaderBar { width: 160px; }
+  .frameNumber { font-size: 1rem; }
+  .frameOverlay { right: 0.5rem; }
 }

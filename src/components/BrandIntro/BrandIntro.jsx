@@ -15,7 +15,6 @@ const watchDetails = [
 export default function BrandIntro() {
   const sectionRef = useRef(null)
   const wordTexts = useRef([])
-  const detailWraps = useRef([])
   const bgRef = useRef(null)
 
   useEffect(() => {
@@ -56,10 +55,9 @@ export default function BrandIntro() {
       <div ref={bgRef} className={styles.bgGlow} />
       <div className={styles.bgGradients} />
 
-      {watchDetails.map((d, i) => (
+      {watchDetails.map((d) => (
         <div
           key={d.id}
-          ref={(el) => { detailWraps.current[i] = el }}
           className={styles.detailWrap}
           style={{ top: `${d.y}%`, left: `${d.x}%` }}
         >
@@ -68,6 +66,7 @@ export default function BrandIntro() {
               src="/images/watch-about.jpg"
               alt=""
               aria-hidden="true"
+              loading="lazy"
               style={{
                 objectPosition: d.pos,
                 transform: `scale(${d.scale})`,

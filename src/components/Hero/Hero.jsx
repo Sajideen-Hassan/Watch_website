@@ -90,7 +90,6 @@ export default function Hero() {
   const renderedRef = useRef(-1)
   const lastDrawFrameRef = useRef(-1)
   const loadedFlagRef = useRef(false)
-  const dimsRef = useRef({ w: 0, h: 0 })
 
   const [loadProgress, setLoadProgress] = useState(0)
   const [isReady, setIsReady] = useState(false)
@@ -125,14 +124,12 @@ export default function Hero() {
       canvas.style.width = cw + 'px'
       canvas.style.height = ch + 'px'
 
-      dimsRef.current = { w: pw, h: ph, cw, ch }
-
       cachedCoverParams = getCoverParams(FRAME_W, FRAME_H, pw, ph)
 
       ctx.fillStyle = '#0a0a0a'
       ctx.fillRect(0, 0, pw, ph)
 
-      setDiag(d => ({ ...d, cw: pw, ch: ph, canvasStatus: 'Active' }))
+      setDiag(d => ({ ...d, cw: pw, ch: ph }))
     }
 
     setupCanvas()
@@ -196,7 +193,6 @@ export default function Hero() {
       canvas.style.width = cw + 'px'
       canvas.style.height = ch + 'px'
 
-      dimsRef.current = { w: pw, h: ph, cw, ch }
       cachedCoverParams = getCoverParams(FRAME_W, FRAME_H, pw, ph)
 
       const lastIdx = renderedRef.current

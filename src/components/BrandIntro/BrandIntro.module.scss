@@ -33,7 +33,6 @@
   background-size: 200% 200%;
   background-position: 0% 0%;
   pointer-events: none;
-  transition: background-position 0.1s linear;
 }
 
 // ─── Detail Images ─────────────────────────────────────────────────────────────
@@ -160,26 +159,46 @@
   letter-spacing: 0.1em;
 }
 
+@media (max-width: 1024px) {
+  .bgGlow { width: 500px; height: 500px; }
+}
+
 @media (max-width: 768px) {
-  .section { height: 100vh; }
+  .section { height: 100vh; height: calc(var(--vh, 1vh) * 100); }
+
+  .bgGlow { width: 350px; height: 350px; }
 
   .detailWrap { width: 80px; height: 80px; }
   .detailLabel { display: none; }
 
   .editorial { padding: 0 1.5rem; }
 
+  .wordBlockFirst { padding-left: 10%; padding-top: 1rem; }
   .wordBlockRight { margin-right: 2%; }
+  .wordBlockCenter { padding-left: 2%; }
   .wordBlockRightBottom { margin-right: 5%; }
 
-  .wordTime { font-size: clamp(3.5rem, 18vw, 5rem); }
-  .wordIsAn { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+  .wordTime { font-size: clamp(3rem, 14vw, 5rem); }
+  .wordIsAn { font-size: clamp(1.2rem, 5vw, 2.2rem); }
   .wordExpression {
-    font-size: clamp(2.8rem, 14vw, 4rem);
+    font-size: clamp(2.2rem, 12vw, 4rem);
     -webkit-text-stroke: 1px $color-red;
   }
-  .wordOfPrecision { font-size: clamp(1.2rem, 5vw, 2rem); }
+  .wordOfPrecision { font-size: clamp(1rem, 4.5vw, 1.8rem); }
 }
 
 @media (max-width: 480px) {
+  .bgGlow { width: 250px; height: 250px; }
+
   .detailWrap { width: 55px; height: 55px; }
+
+  .wordBlockFirst { padding-left: 5%; }
+  .wordBlockCenter { padding-left: 0; }
+  .wordBlockRight { margin-right: 0; }
+  .wordBlockRightBottom { margin-right: 2%; }
+
+  .wordTime { font-size: clamp(2.2rem, 15vw, 3.5rem); letter-spacing: 0.05em; }
+  .wordIsAn { font-size: clamp(1rem, 5vw, 1.5rem); }
+  .wordExpression { font-size: clamp(1.8rem, 12vw, 2.8rem); }
+  .wordOfPrecision { font-size: clamp(0.85rem, 4.5vw, 1.2rem); }
 }

@@ -124,6 +124,7 @@ export default function Craftsmanship() {
               <img
                 src="/images/feature-craftsmanship.jpg"
                 alt="REISER watch movement"
+                loading="lazy"
                 className={styles.image}
               />
             </div>

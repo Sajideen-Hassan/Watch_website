@@ -12,5 +12,16 @@ export default defineConfig({
         api: 'modern-compiler'
       }
     }
-  }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          gsap: ['gsap', 'gsap/ScrollTrigger'],
+          lenis: ['lenis'],
+        },
+      },
+    },
+  },
 })

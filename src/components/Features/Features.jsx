@@ -42,7 +42,6 @@ export default function Features() {
   const nums = useRef([])
   const titles = useRef([])
   const descs = useRef([])
-  const images = useRef([])
   const imageWraps = useRef([])
 
   useEffect(() => {
@@ -100,10 +99,10 @@ export default function Features() {
             className={styles.imageSide}
           >
             <img
-              ref={(el) => { images.current[i] = el }}
               src={f.image}
               alt=""
               aria-hidden="true"
+              loading="lazy"
               className={styles.panelImage}
               style={{ objectPosition: f.pos }}
             />

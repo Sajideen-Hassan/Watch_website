@@ -222,12 +222,15 @@
     flex-direction: column;
     align-items: center;
     gap: 2rem;
+    perspective: none;
   }
+
+  .heading { margin-bottom: 2.5rem; }
 
   .card {
     flex: 0 0 auto;
     width: 100%;
-    max-width: 320px;
+    max-width: 340px;
 
     .cardInner {
       transform: none !important;
@@ -244,5 +247,23 @@
     .cardGlow {
       opacity: 1;
     }
+
+    .imageWrap {
+      filter: none !important;
+    }
   }
+
+  .cardName { font-size: clamp(1rem, 3vw, 1.2rem); }
+  .cardSub { font-size: 0.6rem; }
+  .indicators { margin-top: 2rem; }
+  .dot { width: 10px; height: 10px; }
+}
+
+@media (max-width: 480px) {
+  .section { padding: 4rem 1rem 3rem; }
+  .card { max-width: 280px; }
+  .heading { font-size: clamp(1.8rem, 8vw, 2.5rem); margin-bottom: 2rem; }
+  .carousel { gap: 1.5rem; }
+  .cardInfo { gap: 0.15rem; }
+  .indicators { margin-top: 1.5rem; gap: 0.6rem; }
 }

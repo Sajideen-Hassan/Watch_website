@@ -117,7 +117,7 @@
   .panel {
     grid-template-columns: 1fr;
     height: auto;
-    min-height: 100vh;
+    min-height: auto;
   }
 
   .panelReverse {
@@ -129,13 +129,26 @@
     }
   }
 
-  .imageSide { height: 50vh; }
+  .imageSide { height: 45vh; min-height: 300px; }
 
   .imageOverlay {
     background: linear-gradient(to bottom, transparent 30%, rgba($color-bg, 0.8) 100%);
   }
 
-  .textSide { padding: 2rem 1.5rem 4rem; }
+  .textSide { padding: 2rem 1.5rem 3rem; }
 
   .title { white-space: normal; }
+
+  .num { font-size: clamp(3rem, 12vw, 5rem); margin-bottom: 0.5rem; }
+  .title { font-size: clamp(1.8rem, 7vw, 3rem); margin-bottom: 1rem; }
+  .desc { font-size: clamp(0.8rem, 2.5vw, 0.95rem); max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .panel { min-height: auto; }
+  .imageSide { height: 35vh; min-height: 220px; }
+  .textSide { padding: 1.5rem 1.25rem 2.5rem; }
+  .num { font-size: clamp(2.5rem, 15vw, 4rem); }
+  .title { font-size: clamp(1.5rem, 8vw, 2.2rem); }
+  .desc { font-size: clamp(0.75rem, 3vw, 0.9rem); }
 }

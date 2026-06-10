@@ -95,6 +95,7 @@ export default function Collection() {
                 <img
                   src="/images/watch-about.jpg"
                   alt={v.name}
+                  loading="lazy"
                   className={styles.cardImage}
                   style={{ filter: v.filter }}
                   draggable={false}

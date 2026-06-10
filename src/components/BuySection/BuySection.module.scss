@@ -208,8 +208,15 @@
   }
 }
 
+@media (max-width: 768px) {
+  .headlineInner { font-size: clamp(2.5rem, 12vw, 4rem); }
+  .headlineAlt { font-size: clamp(1.5rem, 7vw, 2.5rem); }
+  .label { font-size: clamp(0.5rem, 1.5vw, 0.65rem); }
+  .support { font-size: clamp(0.8rem, 2.5vw, 0.95rem); }
+}
+
 @media (max-width: 600px) {
-  .showcase { padding: 3rem 1.5rem; gap: 1rem; }
+  .showcase { padding: 2.5rem 1.25rem; gap: 1rem; }
 
   .buttons {
     flex-direction: column;
@@ -219,6 +226,17 @@
   .primaryBtn, .secondaryBtn {
     width: 100%;
     text-align: center;
-    padding: 1rem 2rem;
+    padding: 1.1rem 2rem;
+    font-size: 0.75rem;
   }
+
+  .headlineInner { font-size: clamp(2rem, 14vw, 3.5rem); }
+  .headlineAlt { font-size: clamp(1.2rem, 8vw, 2rem); }
+}
+
+@media (max-width: 400px) {
+  .showcase { padding: 2rem 1rem; }
+  .headlineInner { font-size: clamp(1.6rem, 12vw, 2.2rem); }
+  .headlineAlt { font-size: clamp(1rem, 7vw, 1.4rem); }
+  .primaryBtn, .secondaryBtn { padding: 1rem 1.5rem; }
 }

@@ -11,7 +11,6 @@ import Collection from './components/Collection/Collection'
 import Craftsmanship from './components/Craftsmanship/Craftsmanship'
 import BuySection from './components/BuySection/BuySection'
 import Footer from './components/Footer/Footer'
-import CustomCursor from './components/CustomCursor/CustomCursor'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,35 +18,45 @@ function App() {
   const lenisRef = useRef(null)
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      smoothTouch: true,
-    })
+    let lenis = null
+    const tickerFn = (time) => { if (lenis) lenis.raf(time * 1000) }
 
-    lenisRef.current = lenis
-    window.__lenis = lenis
+    const initLenis = () => {
+      lenis = new Lenis({
+        duration: 2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+        smoothTouch: true,
+      })
 
-    lenis.on('scroll', ScrollTrigger.update)
+      lenisRef.current = lenis
+      window.__lenis = lenis
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
-    })
+      lenis.on('scroll', ScrollTrigger.update)
+      gsap.ticker.add(tickerFn)
+      gsap.ticker.lagSmoothing(0)
+    }
 
-    gsap.ticker.lagSmoothing(0)
+    const id = 'requestIdleCallback' in window
+      ? requestIdleCallback(initLenis, { timeout: 2000 })
+      : setTimeout(initLenis, 100)
 
     return () => {
+      if (typeof id === 'number') clearTimeout(id)
+      else cancelIdleCallback(id)
+      if (lenis) {
+        gsap.ticker.remove(tickerFn)
+        lenis.destroy()
+      }
       window.__lenis = null
-      lenis.destroy()
-      gsap.ticker.remove((time) => lenis.raf(time * 1000))
+      lenisRef.current = null
     }
   }, [])
 
   return (
     <>
-      <CustomCursor />
       <Navbar />
+      <h1 className="sr-only">REISER — Swiss Luxury Timepieces</h1>
       <main>
         <Hero />
         <BrandIntro />

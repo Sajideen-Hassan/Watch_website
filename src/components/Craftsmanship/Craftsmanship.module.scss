@@ -16,6 +16,10 @@
   will-change: transform;
 }
 
+@media (max-width: 768px) {
+  .bgParallax { inset: -40px; }
+}
+
 .bgImage {
   width: 100%;
   height: 100%;
@@ -124,15 +128,28 @@
 }
 
 @media (max-width: 900px) {
+  .section { min-height: auto; }
+
   .split {
     grid-template-columns: 1fr;
     min-height: auto;
   }
 
   .imageSide { padding: 1.5rem 1.5rem 0; }
-  .imageReveal { height: 45vh; }
+  .imageReveal { height: 40vh; min-height: 280px; }
 
-  .textSide { padding: 2rem 1.5rem 4rem; }
+  .textSide { padding: 2rem 1.5rem 3rem; }
 
   .heading { font-size: clamp(2rem, 8vw, 3rem); }
+  .desc { font-size: clamp(0.8rem, 2.5vw, 0.95rem); max-width: 100%; }
+  .accent { margin-bottom: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .imageSide { padding: 1rem 1rem 0; }
+  .imageReveal { height: 30vh; min-height: 200px; }
+  .textSide { padding: 1.5rem 1.25rem 2.5rem; }
+  .heading { font-size: clamp(1.5rem, 9vw, 2.2rem); }
+  .desc { font-size: clamp(0.75rem, 3vw, 0.85rem); }
+  .accent { width: 40px; margin-bottom: 1.25rem; }
 }

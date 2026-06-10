@@ -28,6 +28,8 @@ export default function BuySection() {
   }, [])
 
   useEffect(() => {
+    let trackMouse
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -74,9 +76,11 @@ export default function BuySection() {
         ease: 'sine.inOut',
       })
 
-      const trackMouse = () => {
+      trackMouse = () => {
+        const glow = glowRef.current
+        if (!glow) return
         const { x, y } = mouseRef.current
-        gsap.to(glowRef.current, {
+        gsap.to(glow, {
           x: (x - 0.5) * 40,
           y: (y - 0.5) * 30,
           duration: 1.5,
@@ -111,6 +115,7 @@ export default function BuySection() {
     return () => {
       ctx.revert()
       sectionRef.current?.removeEventListener('mousemove', handleMouseMove)
+      gsap.ticker.remove(trackMouse)
     }
   }, [handleMouseMove])
 
