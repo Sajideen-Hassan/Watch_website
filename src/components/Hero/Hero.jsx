@@ -41,7 +41,6 @@ async function tryLoadFrame(url, retries = MAX_RETRIES) {
         img.src = URL.createObjectURL(blob)
       })
     } catch (err) {
-      console.error(`Frame attempt ${attempt + 1}/${retries + 1} failed:`, url, err)
       if (attempt < retries) await new Promise(r => setTimeout(r, 200 * (attempt + 1)))
     }
   }
@@ -58,10 +57,7 @@ function Debug({ diag }) {
         ['Rendered Frame', diag.renderedFrame > 0 ? String(diag.renderedFrame).padStart(3, '0') : '—'],
         ['Loaded', `${diag.loadedCount} / ${TOTAL_FRAMES}`],
         ['Scroll Progress', `${diag.scrollProgress}%`],
-        ['Pinned', diag.isPinned ? 'YES' : 'NO'],
-        ['Frame Source', diag.frameSource],
-        ['Canvas', diag.canvasStatus],
-        ['Scroll Dist', `${diag.scrollDist}px`],
+        ['Canvas', `${diag.cw}×${diag.ch}`],
       ].map(([label, value]) => (
         <div className={styles.diagRow} key={label}>
           <span>{label}</span>
@@ -85,13 +81,16 @@ function FrameOverlay({ frame, total }) {
   )
 }
 
+let cachedCoverParams = null
+
 export default function Hero() {
   const sectionRef = useRef(null)
   const canvasRef = useRef(null)
   const framesRef = useRef([])
-  const logRef = useRef({ lastLoggedFrame: -1 })
   const renderedRef = useRef(-1)
+  const lastDrawFrameRef = useRef(-1)
   const loadedFlagRef = useRef(false)
+  const dimsRef = useRef({ w: 0, h: 0 })
 
   const [loadProgress, setLoadProgress] = useState(0)
   const [isReady, setIsReady] = useState(false)
@@ -99,64 +98,57 @@ export default function Hero() {
   const [diag, setDiag] = useState({
     currentFrame: 1, renderedFrame: -1,
     loadedCount: 0, scrollProgress: 0,
-    isPinned: false, frameSource: '—',
-    canvasStatus: 'Initializing', status: 'INIT',
+    status: 'INIT', cw: 0, ch: 0,
   })
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
-    const LOG = true
 
     let stMain, stExit, rafId, loaderTimeout
     let isDestroyed = false
     let loadedCount = 0
     const failedFrames = new Set()
-    let hasDrawnInitial = false
 
     const sd = Math.round(Math.max(window.innerHeight * 2, TOTAL_FRAMES * 12))
 
-    // ── Fill canvas black immediately so it's never blank ────────────
-    const fillDark = () => {
-      if (!canvas) return
+    const setupCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
-      const parent = canvas.parentElement
-      if (parent) {
-        const rect = parent.getBoundingClientRect()
-        canvas.width = Math.floor(rect.width * dpr)
-        canvas.height = Math.floor(rect.height * dpr)
-        canvas.style.width = rect.width + 'px'
-        canvas.style.height = rect.height + 'px'
-      } else {
-        canvas.width = Math.floor(window.innerWidth * dpr)
-        canvas.height = Math.floor(window.innerHeight * dpr)
-        canvas.style.width = window.innerWidth + 'px'
-        canvas.style.height = window.innerHeight + 'px'
-      }
-      ctx.fillStyle = '#0a0a0a'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-      setDiag(d => ({ ...d, canvasStatus: 'Dark Fill', canvasW: canvas.width, canvasH: canvas.height }))
-    }
-    fillDark()
+      const cw = Math.floor(window.innerWidth)
+      const ch = Math.floor(window.innerHeight)
+      const pw = Math.floor(cw * dpr)
+      const ph = Math.floor(ch * dpr)
 
-    // ── Frame drawing ───────────────────────────────────────────────
+      canvas.width = pw
+      canvas.height = ph
+      canvas.style.width = cw + 'px'
+      canvas.style.height = ch + 'px'
+
+      dimsRef.current = { w: pw, h: ph, cw, ch }
+
+      cachedCoverParams = getCoverParams(FRAME_W, FRAME_H, pw, ph)
+
+      ctx.fillStyle = '#0a0a0a'
+      ctx.fillRect(0, 0, pw, ph)
+
+      setDiag(d => ({ ...d, cw: pw, ch: ph, canvasStatus: 'Active' }))
+    }
+
+    setupCanvas()
+
     const drawFrame = (index) => {
       const bm = framesRef.current[index]
       if (!bm || !canvas) return false
-      const cover = getCoverParams(FRAME_W, FRAME_H, canvas.width, canvas.height)
+      const cp = cachedCoverParams
+      if (lastDrawFrameRef.current === index) return true
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.drawImage(bm, cover.sx, cover.sy, cover.sw, cover.sh, 0, 0, canvas.width, canvas.height)
+      ctx.drawImage(bm, cp.sx, cp.sy, cp.sw, cp.sh, 0, 0, canvas.width, canvas.height)
       renderedRef.current = index
-
-      if (LOG && logRef.current.lastLoggedFrame !== index) {
-        logRef.current.lastLoggedFrame = index
-        console.log(`Rendered Frame: ${index} | Progress: ${Math.round((index / TOTAL_FRAMES) * 100)}%`)
-      }
+      lastDrawFrameRef.current = index
       return true
     }
 
-    // ── Frame loaded callback ───────────────────────────────────────
     const onFrameLoaded = (index, bitmap) => {
       if (isDestroyed) return
       framesRef.current[index] = bitmap
@@ -164,35 +156,21 @@ export default function Hero() {
       const pct = Math.floor((loadedCount / TOTAL_FRAMES) * 100)
       setLoadProgress(pct)
 
-      if (LOG) console.log(`Frame loaded: ${index} (${pct}%)`)
+      setDiag(d => ({ ...d, loadedCount, status: loadedCount === TOTAL_FRAMES ? 'OK' : d.status }))
 
-      setDiag(d => ({
-        ...d, loadedCount,
-        status: loadedCount === TOTAL_FRAMES ? 'OK' : d.status,
-      }))
-
-      // Frame 1: draw immediately
       if (index === 1) {
         drawFrame(1)
         setCurrentFrame(1)
-        hasDrawnInitial = true
-        setDiag(d => ({ ...d, renderedFrame: 1, canvasStatus: 'Active' }))
-        if (LOG) {
-          console.log('Initial Frame Rendered')
-          console.log('Frame 1 Visible')
-          console.log('Canvas Ready')
-        }
+        setDiag(d => ({ ...d, renderedFrame: 1 }))
       }
 
       if (!loadedFlagRef.current && loadedCount >= PHASE_1_COUNT) {
         loadedFlagRef.current = true
         setIsReady(true)
         setDiag(d => ({ ...d, status: 'ACTIVE' }))
-        if (LOG) console.log(`Phase 1 ready — ${loadedCount} frames loaded`)
       }
     }
 
-    // ── Frame loader ───────────────────────────────────────────────
     const loadFrame = async (i) => {
       if (framesRef.current[i] || failedFrames.has(i)) return
       const url = `/frames-avif/frame_${String(i).padStart(4, '0')}.avif`
@@ -201,45 +179,45 @@ export default function Hero() {
         onFrameLoaded(i, bitmap)
       } else {
         failedFrames.add(i)
-        console.error('Frame failed permanently:', i, url)
       }
     }
 
-    // ── Canvas resize ──────────────────────────────────────────────
     const resize = () => {
-      const parent = canvas.parentElement
-      if (!parent) return
-      const rect = parent.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
-      const w = Math.floor(rect.width * dpr)
-      const h = Math.floor(rect.height * dpr)
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w
-        canvas.height = h
-        canvas.style.width = rect.width + 'px'
-        canvas.style.height = rect.height + 'px'
-        // redraw last known frame
-        const lastIdx = renderedRef.current
-        if (lastIdx > 0 && framesRef.current[lastIdx]) {
-          drawFrame(lastIdx)
-        } else {
-          ctx.fillStyle = '#0a0a0a'
-          ctx.fillRect(0, 0, canvas.width, canvas.height)
-        }
-        setDiag(d => ({ ...d, canvasW: w, canvasH: h }))
+      const cw = Math.floor(window.innerWidth)
+      const ch = Math.floor(window.innerHeight)
+      const pw = Math.floor(cw * dpr)
+      const ph = Math.floor(ch * dpr)
+
+      if (canvas.width === pw && canvas.height === ph) return
+
+      canvas.width = pw
+      canvas.height = ph
+      canvas.style.width = cw + 'px'
+      canvas.style.height = ch + 'px'
+
+      dimsRef.current = { w: pw, h: ph, cw, ch }
+      cachedCoverParams = getCoverParams(FRAME_W, FRAME_H, pw, ph)
+
+      const lastIdx = renderedRef.current
+      if (lastIdx > 0 && framesRef.current[lastIdx]) {
+        drawFrame(lastIdx)
+      } else {
+        ctx.fillStyle = '#0a0a0a'
+        ctx.fillRect(0, 0, pw, ph)
       }
+      setDiag(d => ({ ...d, cw: pw, ch: ph }))
+      ScrollTrigger.refresh()
     }
 
     window.addEventListener('resize', resize)
 
-    // ── Phase 1: frames 1–20 ───────────────────────────────────────
     const phase1 = async () => {
       const batch = []
       for (let i = 1; i <= PHASE_1_COUNT; i++) batch.push(loadFrame(i))
       await Promise.all(batch)
     }
 
-    // ── Phase 2: frames 21–130 ─────────────────────────────────────
     const phase2 = async () => {
       for (let i = PHASE_1_COUNT + 1; i <= TOTAL_FRAMES; i += BATCH_SIZE) {
         if (isDestroyed) return
@@ -248,10 +226,8 @@ export default function Hero() {
         await Promise.all(batch)
         await new Promise(r => requestAnimationFrame(r))
       }
-      if (LOG) console.log('All 130 frames loaded')
       if (failedFrames.size > 0) {
         setDiag(d => ({ ...d, status: 'WARN' }))
-        if (LOG) console.warn(`Failed frames: ${[...failedFrames].join(', ')}`)
       } else {
         setDiag(d => ({ ...d, status: 'OK' }))
       }
@@ -264,11 +240,9 @@ export default function Hero() {
         loadedFlagRef.current = true
         setIsReady(true)
         setDiag(d => ({ ...d, status: 'WARN' }))
-        if (LOG) console.warn('Loader timeout — forcing ready')
       }
     }, LOADER_TIMEOUT)
 
-    // ── ScrollTrigger: pin only ───────────────────────────────────
     stMain = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
@@ -279,7 +253,6 @@ export default function Hero() {
       invalidateOnRefresh: true,
     })
 
-    // ── Exit overlay — fades over last 120px ─────────────────────
     const exitEl = sectionRef.current.querySelector('.' + styles.exitOverlay)
     if (exitEl) {
       stExit = gsap.to(exitEl, {
@@ -296,52 +269,41 @@ export default function Hero() {
 
     ScrollTrigger.refresh()
 
-    // ── Render loop — frame from stMain.progress directly ──────────
-    function renderLoop(ts) {
+    function computeFrame(progress) {
+      const raw = Math.floor(progress * (TOTAL_FRAMES - 1)) + 1
+      return Math.max(1, Math.min(TOTAL_FRAMES, raw))
+    }
+
+    function resolveFrame(target) {
+      if (framesRef.current[target]) return target
+      for (let i = target; i >= 1; i--) {
+        if (framesRef.current[i]) return i
+      }
+      for (let i = target + 1; i <= TOTAL_FRAMES; i++) {
+        if (framesRef.current[i]) return i
+      }
+      return -1
+    }
+
+    function renderLoop() {
       if (isDestroyed) return
 
       const progress = stMain ? stMain.progress : 0
-      const pinned = stMain ? stMain.isActive : false
+      const target = computeFrame(progress)
+      const drawTarget = resolveFrame(target)
+      const displayFrame = Math.max(target, 1)
 
-      // frame = floor(progress * (TOTAL_FRAMES - 1)) + 1
-      // progress 0 → frame 1, progress 1 → frame 130
-      const rawTarget = Math.floor(progress * (TOTAL_FRAMES - 1)) + 1
-      const clampedTarget = Math.max(1, Math.min(TOTAL_FRAMES, rawTarget))
-
-      // resolution: find nearest loaded frame
-      let drawTarget = -1
-      if (framesRef.current[clampedTarget]) {
-        drawTarget = clampedTarget
-      } else {
-        for (let i = clampedTarget; i >= 1; i--) {
-          if (framesRef.current[i]) { drawTarget = i; break }
-        }
-        if (drawTarget === -1) {
-          for (let i = clampedTarget + 1; i <= TOTAL_FRAMES; i++) {
-            if (framesRef.current[i]) { drawTarget = i; break }
-          }
-        }
+      if (displayFrame !== lastDrawFrameRef.current) {
+        setCurrentFrame(displayFrame)
+        setDiag(d => ({
+          ...d,
+          currentFrame: displayFrame,
+          renderedFrame: renderedRef.current,
+          scrollProgress: Math.round(progress * 100),
+        }))
       }
 
-      const displayFrame = Math.max(clampedTarget, 1)
-      setCurrentFrame(displayFrame)
-
-      // source label for diagnostics
-      let source = '—'
-      if (drawTarget === clampedTarget) source = 'direct'
-      else if (drawTarget > 0 && drawTarget < clampedTarget) source = `fallback_bwd_${clampedTarget - drawTarget}`
-      else if (drawTarget > clampedTarget) source = `fallback_fwd_${drawTarget - clampedTarget}`
-      else source = 'unavailable'
-
-      setDiag(d => ({
-        ...d, currentFrame: displayFrame,
-        renderedFrame: renderedRef.current,
-        scrollProgress: Math.round(progress * 100),
-        isPinned: pinned, frameSource: source,
-      }))
-
-      // draw if we have a valid target and it differs from last drawn
-      if (drawTarget > 0 && drawTarget !== renderedRef.current && framesRef.current[drawTarget]) {
+      if (drawTarget > 0 && drawTarget !== renderedRef.current) {
         drawFrame(drawTarget)
       }
 
@@ -350,7 +312,6 @@ export default function Hero() {
 
     rafId = requestAnimationFrame(renderLoop)
 
-    // ── Cleanup ──────────────────────────────────────────────────
     return () => {
       isDestroyed = true
       if (stMain) stMain.kill()
@@ -360,6 +321,7 @@ export default function Hero() {
       window.removeEventListener('resize', resize)
       framesRef.current.forEach(b => { if (b && typeof b.close === 'function') b.close() })
       framesRef.current.length = 0
+      cachedCoverParams = null
     }
   }, [])
 
@@ -384,6 +346,16 @@ export default function Hero() {
       </div>
 
       <div className={styles.exitOverlay} />
+
+      <div className={`${styles.scrollIndicator} ${currentFrame === 1 && isReady ? styles.scrollVisible : ''}`}>
+        <div className={styles.scrollArrow}>
+          <svg width="20" height="32" viewBox="0 0 20 32" fill="none">
+            <rect x="1.5" y="1.5" width="17" height="29" rx="8.5" stroke="currentColor" strokeWidth="1.5" />
+            <circle cx="10" cy="11" r="2" fill="currentColor" className={styles.scrollDot} />
+          </svg>
+        </div>
+        <span className={styles.scrollText}>Disquiet Your Ambition</span>
+      </div>
 
       <FrameOverlay frame={currentFrame} total={TOTAL_FRAMES} />
       <Debug diag={diag} />

@@ -2,69 +2,135 @@
 
 .section {
   position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: $color-bg;
-  padding: 10rem 2rem;
-  text-align: center;
   overflow: hidden;
 }
 
-.bgGradient {
+// ─── Background Layers ────────────────────────────────────────────────────────
+
+.noise {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 50% 40% at 50% 50%, rgba($color-gold, 0.03) 0%, transparent 70%);
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
   pointer-events: none;
+  z-index: 0;
 }
 
-.glow {
+.bgBase {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 60%, rgba($color-neon-blue, 0.02) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 30% 30%, rgba($color-red, 0.015) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bgGlow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba($color-gold, 0.06) 0%, transparent 70%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba($color-silver, 0.03) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
+  z-index: 1;
   will-change: transform, opacity;
 }
 
-// ─── Content ──────────────────────────────────────────────────────────────────
+.bgAccent {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 200px;
+  background: radial-gradient(ellipse, rgba($color-red, 0.02) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-.content {
+// ─── Showcase ─────────────────────────────────────────────────────────────────
+
+.showcase {
   position: relative;
   z-index: 2;
-  max-width: 550px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+  width: 100%;
+  max-width: 800px;
+  padding: 3rem 2rem;
 }
 
-.heading {
-  font-family: $font-serif;
-  font-size: clamp(2.8rem, 5vw, 4.5rem);
-  font-weight: 300;
-  color: $color-off-white;
-  line-height: 1.1;
-  will-change: transform, opacity;
+// ─── Label ────────────────────────────────────────────────────────────────────
 
-  em {
-    display: block;
-    font-style: italic;
-    background: linear-gradient(135deg, $color-gold 0%, $color-gold-light 60%, $color-gold 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-}
-
-.text {
+.label {
   font-family: $font-sans;
-  font-size: 0.9rem;
+  font-size: clamp(0.55rem, 0.7vw, 0.7rem);
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba($color-silver, 0.2);
+  margin-bottom: 1rem;
+  will-change: transform, opacity, filter;
+}
+
+// ─── Headline ─────────────────────────────────────────────────────────────────
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.headlineMask {
+  display: block;
+  overflow: hidden;
+  line-height: 1.05;
+}
+
+.headlineInner {
+  display: block;
+  font-family: $font-serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 600;
+  color: $color-silver;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  text-align: center;
+  will-change: transform;
+}
+
+.headlineAlt {
   font-weight: 300;
-  color: $color-gray;
+  font-style: italic;
+  color: rgba($color-silver, 0.5);
+  font-size: clamp(2rem, 6vw, 4.5rem);
+}
+
+// ─── Supporting ───────────────────────────────────────────────────────────────
+
+.support {
+  font-family: $font-sans;
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-weight: 300;
+  color: rgba($color-gray, 0.5);
+  text-align: center;
   line-height: 1.6;
+  max-width: 420px;
+  margin-bottom: 1rem;
   will-change: transform, opacity;
 }
 
@@ -75,73 +141,84 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  margin-top: 1.5rem;
   will-change: transform, opacity;
 }
 
-.buyBtn {
+.primaryBtn {
   position: relative;
-  overflow: hidden;
   font-family: $font-sans;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: $color-bg;
-  background: linear-gradient(135deg, $color-gold-dark, $color-gold, $color-gold-light);
-  padding: 1.2rem 3rem;
-  transition: box-shadow 0.3s ease;
-  will-change: transform;
+  background: $color-silver;
+  border: none;
+  padding: 1.15rem 3.5rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.5s $transition-luxury, box-shadow 0.5s ease;
 
-  &:hover { box-shadow: 0 15px 40px rgba($color-gold, 0.3); }
-}
-
-.btnSheen {
-  position: absolute;
-  top: -50%;
-  left: -75%;
-  width: 50%;
-  height: 200%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: skewX(-20deg);
-  pointer-events: none;
-  transition: left 0.6s ease;
-
-  .buyBtn:hover & { left: 125%; }
-}
-
-.btnInner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.contactBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: $font-sans;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: $color-gray;
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 1.2rem 2.5rem;
-  transition: color 0.3s ease, border-color 0.3s ease;
-  will-change: transform;
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--my, 50%);
+    left: var(--mx, 50%);
+    transform: translate(-50%, -50%) scale(0);
+    width: 200%;
+    padding-bottom: 200%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: transform 0.6s ease;
+    pointer-events: none;
+  }
 
   &:hover {
-    color: $color-gold;
-    border-color: rgba($color-gold, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba($color-silver, 0.15);
+
+    &::before {
+      transform: translate(-50%, -50%) scale(1);
+    }
   }
 }
 
-// ─── Responsive ───────────────────────────────────────────────────────────────
+.btnText {
+  position: relative;
+  z-index: 1;
+}
+
+.secondaryBtn {
+  font-family: $font-sans;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: $color-silver;
+  background: none;
+  border: 1px solid rgba($color-silver, 0.2);
+  padding: 1.15rem 2.8rem;
+  cursor: pointer;
+  transition: border-color 0.5s ease, transform 0.5s $transition-luxury, background 0.5s ease;
+
+  &:hover {
+    border-color: $color-silver;
+    transform: translateY(-2px);
+    background: rgba($color-silver, 0.03);
+  }
+}
 
 @media (max-width: 600px) {
-  .section { padding: 6rem 1.5rem; }
+  .showcase { padding: 3rem 1.5rem; gap: 1rem; }
 
-  .buttons { flex-direction: column; width: 100%; }
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+  }
 
-  .buyBtn, .contactBtn { width: 100%; justify-content: center; }
+  .primaryBtn, .secondaryBtn {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 2rem;
+  }
 }

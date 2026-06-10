@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './BuySection.module.scss'
@@ -7,104 +7,172 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function BuySection() {
   const sectionRef = useRef(null)
+  const labelRef = useRef(null)
+  const headline1Ref = useRef(null)
+  const headline1InnerRef = useRef(null)
+  const headline2Ref = useRef(null)
+  const headline2InnerRef = useRef(null)
+  const supportRef = useRef(null)
+  const buttonsRef = useRef(null)
+
   const glowRef = useRef(null)
-  const headingRef = useRef(null)
-  const textRef = useRef(null)
-  const btnsRef = useRef(null)
-  const buyBtnRef = useRef(null)
-  const contactBtnRef = useRef(null)
+  const mouseRef = useRef({ x: 0.5, y: 0.5 })
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.to(glowRef.current, {
-        scale: 1.2, opacity: 0.4,
-        repeat: -1, yoyo: true, duration: 3.5, ease: 'sine.inOut',
-      })
-
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' }
-      })
-
-      tl.fromTo(headingRef.current,
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' }
-      )
-      tl.fromTo(textRef.current,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
-        '-=0.5'
-      )
-      tl.fromTo(btnsRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
-        '-=0.4'
-      )
-    }, sectionRef)
-
-    const magnetic = (btn) => {
-      if (!btn) return
-      const onMove = (e) => {
-        const rect = btn.getBoundingClientRect()
-        const x = e.clientX - rect.left - rect.width / 2
-        const y = e.clientY - rect.top - rect.height / 2
-        gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out' })
-      }
-      const onLeave = () => {
-        gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' })
-      }
-      btn.addEventListener('mousemove', onMove)
-      btn.addEventListener('mouseleave', onLeave)
-      return () => {
-        btn.removeEventListener('mousemove', onMove)
-        btn.removeEventListener('mouseleave', onLeave)
-      }
-    }
-
-    const cleanBuy = magnetic(buyBtnRef.current)
-    const cleanContact = magnetic(contactBtnRef.current)
-
-    return () => {
-      ctx.revert()
-      cleanBuy?.()
-      cleanContact?.()
+  const handleMouseMove = useCallback((e) => {
+    const rect = sectionRef.current?.getBoundingClientRect()
+    if (!rect) return
+    mouseRef.current = {
+      x: (e.clientX - rect.left) / rect.width,
+      y: (e.clientY - rect.top) / rect.height,
     }
   }, [])
 
-  return (
-    <section id="buy" ref={sectionRef} className={styles.section}>
-      <div ref={glowRef} className={styles.glow} />
-      <div className={styles.bgGradient} />
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 85%',
+        },
+      })
 
-      <div className={styles.content}>
-        <h2 ref={headingRef} className={styles.heading}>
-          Own the <em>Experience</em>
+      tl.fromTo(labelRef.current,
+        { y: 15, opacity: 0, filter: 'blur(4px)' },
+        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' }
+      )
+
+      tl.fromTo(headline1InnerRef.current,
+        { y: '120%' },
+        { y: '0%', duration: 0.7, ease: 'power4.out' },
+        '-=0.3'
+      )
+
+      tl.fromTo(headline2InnerRef.current,
+        { y: '120%' },
+        { y: '0%', duration: 0.7, ease: 'power4.out' },
+        '-=0.4'
+      )
+
+      tl.fromTo(supportRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' },
+        '-=0.3'
+      )
+
+      tl.fromTo(buttonsRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' },
+        '-=0.2'
+      )
+
+      gsap.to(glowRef.current, {
+        scale: 1.15,
+        opacity: 0.6,
+        repeat: -1,
+        yoyo: true,
+        duration: 6,
+        ease: 'sine.inOut',
+      })
+
+      const trackMouse = () => {
+        const { x, y } = mouseRef.current
+        gsap.to(glowRef.current, {
+          x: (x - 0.5) * 40,
+          y: (y - 0.5) * 30,
+          duration: 1.5,
+          ease: 'power2.out',
+        })
+      }
+
+      sectionRef.current?.addEventListener('mousemove', handleMouseMove)
+      gsap.ticker.add(trackMouse)
+
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: (self) => {
+          const p = self.progress
+          gsap.set(headline1Ref.current, {
+            opacity: 1 - p * 0.4,
+            y: -p * 15,
+          })
+          gsap.set(headline2Ref.current, {
+            opacity: 1 - p * 0.5,
+            y: -p * 10,
+          })
+          gsap.set(glowRef.current, {
+            opacity: 0.5 - p * 0.3,
+          })
+        },
+      })
+    }, sectionRef)
+
+    return () => {
+      ctx.revert()
+      sectionRef.current?.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [handleMouseMove])
+
+  const handleBuyHover = (e) => {
+    const btn = e.currentTarget
+    const rect = btn.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    gsap.to(btn, {
+      '--mx': `${x}px`,
+      '--my': `${y}px`,
+      duration: 0.3,
+    })
+  }
+
+  return (
+    <section
+      id="buy"
+      ref={sectionRef}
+      className={styles.section}
+    >
+      <div className={styles.noise} />
+
+      <div className={styles.bgBase} />
+      <div ref={glowRef} className={styles.bgGlow} />
+      <div className={styles.bgAccent} />
+
+      <div className={styles.showcase}>
+        <span ref={labelRef} className={styles.label}>
+          REISER COLLECTION
+        </span>
+
+        <h2 className={styles.headline}>
+          <span ref={headline1Ref} className={styles.headlineMask}>
+            <span ref={headline1InnerRef} className={styles.headlineInner}>
+              Own Time.
+            </span>
+          </span>
+          <span ref={headline2Ref} className={styles.headlineMask}>
+            <span ref={headline2InnerRef} className={`${styles.headlineInner} ${styles.headlineAlt}`}>
+              Not Just A Watch.
+            </span>
+          </span>
         </h2>
 
-        <p ref={textRef} className={styles.text}>
-          Limited edition of 500 pieces. Reserve yours.
+        <p ref={supportRef} className={styles.support}>
+          Precision engineering designed for every defining moment.
         </p>
 
-        <div ref={btnsRef} className={styles.buttons}>
-          <button ref={buyBtnRef} className={styles.buyBtn}>
-            <span className={styles.btnSheen} />
-            <span className={styles.btnInner}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <path d="M16 10a4 4 0 01-8 0" />
-              </svg>
-              Buy Now
-            </span>
+        <div ref={buttonsRef} className={styles.buttons}>
+          <button
+            type="button"
+            className={styles.primaryBtn}
+            onMouseMove={handleBuyHover}
+          >
+            <span className={styles.btnText}>Buy Now</span>
           </button>
-
-          <button ref={contactBtnRef} className={styles.contactBtn}>
-            <span>Request Access</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
+          <button type="button" className={styles.secondaryBtn}>
+            <span>Contact Us</span>
           </button>
         </div>
+
       </div>
     </section>
   )

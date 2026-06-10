@@ -1,0 +1,248 @@
+@use '../../styles/variables' as *;
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  background: $color-bg;
+  padding: 8rem 2rem 6rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba($color-red, 0.015) 0%, transparent 70%),
+    $color-bg;
+  background-size: 100% 100%;
+  background-position: 50% 0%;
+}
+
+.heading {
+  font-family: $font-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  color: $color-silver;
+  letter-spacing: 0.06em;
+  margin-bottom: 4rem;
+  text-align: center;
+  will-change: transform, opacity, filter;
+}
+
+// ─── Carousel ─────────────────────────────────────────────────────────────────
+
+.carousel {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1200px;
+  perspective: 1200px;
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+
+.card {
+  flex: 0 0 220px;
+  perspective: 1000px;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+
+  .cardInner {
+    transition: transform 0.8s $transition-luxury;
+  }
+
+  &.cardActive {
+    z-index: 5;
+
+    .cardInner {
+      transform: scale(1.15);
+    }
+
+    .imageWrap {
+      transform: translateY(-8px);
+    }
+
+    .cardGlow {
+      opacity: 1;
+    }
+
+    .reflection {
+      opacity: 0.5;
+    }
+
+    .cardName {
+      color: $color-silver;
+    }
+  }
+
+  &:not(.cardActive) {
+    .imageWrap {
+      filter: brightness(0.5);
+    }
+
+    .cardInner {
+      transform: scale(0.92);
+    }
+
+    &:hover {
+      .imageWrap {
+        filter: brightness(0.7);
+      }
+    }
+  }
+}
+
+.cardInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8rem;
+}
+
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 6px;
+  transition: transform 0.8s $transition-luxury, filter 0.6s ease;
+  transform-origin: center bottom;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s $transition-luxury;
+  display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+
+  .card:hover & {
+    transform: scale(1.06);
+  }
+}
+
+.cardTint {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.cardGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba($color-silver, 0.08) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+  transform: translateY(-12px);
+
+  .card:hover & {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.cardName {
+  font-family: $font-serif;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  font-weight: 500;
+  color: rgba($color-silver, 0.6);
+  letter-spacing: 0.15em;
+  transition: color 0.6s ease;
+}
+
+.cardSub {
+  font-family: $font-sans;
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: $color-gray;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+
+// ─── Indicators ───────────────────────────────────────────────────────────────
+
+.indicators {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 3rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba($color-silver, 0.15);
+  cursor: pointer;
+  transition: background 0.5s ease, transform 0.5s ease;
+
+  &.dotActive {
+    background: $color-red;
+    transform: scale(1.3);
+  }
+
+  &:hover {
+    background: rgba($color-silver, 0.35);
+  }
+}
+
+@media (max-width: 900px) {
+  .section { padding: 5rem 1.5rem 4rem; }
+
+  .carousel {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .card {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 320px;
+
+    .cardInner {
+      transform: none !important;
+    }
+
+    &.cardActive .cardInner {
+      transform: none !important;
+    }
+
+    &:not(.cardActive) .cardInner {
+      transform: none !important;
+    }
+
+    .cardGlow {
+      opacity: 1;
+    }
+  }
+}

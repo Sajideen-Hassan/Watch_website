@@ -7,7 +7,8 @@ import Hero from './components/Hero/Hero'
 import BrandIntro from './components/BrandIntro/BrandIntro'
 import About from './components/About/About'
 import Features from './components/Features/Features'
-import Experience from './components/Experience/Experience'
+import Collection from './components/Collection/Collection'
+import Craftsmanship from './components/Craftsmanship/Craftsmanship'
 import BuySection from './components/BuySection/BuySection'
 import Footer from './components/Footer/Footer'
 import CustomCursor from './components/CustomCursor/CustomCursor'
@@ -26,6 +27,7 @@ function App() {
     })
 
     lenisRef.current = lenis
+    window.__lenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
 
@@ -36,6 +38,7 @@ function App() {
     gsap.ticker.lagSmoothing(0)
 
     return () => {
+      window.__lenis = null
       lenis.destroy()
       gsap.ticker.remove((time) => lenis.raf(time * 1000))
     }
@@ -50,7 +53,8 @@ function App() {
         <BrandIntro />
         <About />
         <Features />
-        <Experience />
+        <Collection />
+        <Craftsmanship />
         <BuySection />
       </main>
       <Footer />

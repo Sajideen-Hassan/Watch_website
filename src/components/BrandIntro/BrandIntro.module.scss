@@ -2,75 +2,184 @@
 
 .section {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: $color-bg;
   overflow: hidden;
-  padding: 2rem;
 }
 
-.bgGradient {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba($color-gold, 0.04) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.glow {
+.bgGlow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba($color-gold, 0.05) 0%, transparent 70%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba($color-red, 0.07) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   will-change: transform, opacity;
 }
 
-.content {
-  position: relative;
+.bgGradients {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 35% at 15% 80%, rgba($color-neon-blue, 0.025) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 45% at 85% 15%, rgba($color-red, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 30% at 50% 50%, rgba($color-silver, 0.015) 0%, transparent 50%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  pointer-events: none;
+  transition: background-position 0.1s linear;
+}
+
+// ─── Detail Images ─────────────────────────────────────────────────────────────
+
+.detailWrap {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba($color-silver, 0.08);
+  pointer-events: none;
   z-index: 2;
-  text-align: center;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.goldLine {
-  width: 80px;
-  height: 1px;
-  background: $color-gold;
   will-change: transform, opacity;
 }
 
-.heading {
-  font-family: $font-serif;
-  font-size: clamp(3rem, 7vw, 6rem);
-  font-weight: 300;
-  color: $color-off-white;
-  line-height: 1.1;
-  letter-spacing: 0.02em;
-  will-change: transform, opacity, filter;
+.detailImage {
+  width: 100%;
+  height: 100%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: grayscale(40%) contrast(1.15);
+  }
 }
 
-.desc {
+.detailLabel {
+  position: absolute;
+  bottom: -1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: $font-sans;
-  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba($color-silver, 0.25);
+  white-space: nowrap;
+}
+
+// ─── Editorial Typography ──────────────────────────────────────────────────────
+
+.editorial {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding: 0 6%;
+  pointer-events: none;
+}
+
+.wordBlock {
+  position: relative;
+}
+
+.wordBlockRight {
+  text-align: right;
+  margin-right: 5%;
+  margin-top: -0.6em;
+}
+
+.wordBlockCenter {
+  text-align: center;
+  margin-top: -0.3em;
+  padding-left: 6%;
+}
+
+.wordBlockRightBottom {
+  text-align: right;
+  margin-right: 10%;
+  margin-top: -0.4em;
+}
+
+.wordMask {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.1em 0;
+}
+
+.word {
+  display: inline-block;
+  font-family: $font-serif;
+  color: $color-silver;
+  line-height: 1;
+  will-change: transform;
+}
+
+.wordBlockFirst {
+  text-align: left;
+  padding-left: 18%;
+  padding-top: 2rem;
+}
+
+.wordTime {
+  font-size: clamp(6rem, 18vw, 14rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: $color-silver;
+}
+
+.wordIsAn {
+  font-size: clamp(2rem, 5vw, 4.5rem);
   font-weight: 300;
-  color: $color-gray;
-  line-height: 1.7;
-  max-width: 400px;
-  will-change: transform, opacity;
+  color: rgba($color-silver, 0.5);
+  letter-spacing: 0.15em;
+}
+
+.wordExpression {
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 700;
+  -webkit-text-stroke: 2px $color-red;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: 0.08em;
+}
+
+.wordOfPrecision {
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba($color-silver, 0.6);
+  letter-spacing: 0.1em;
 }
 
 @media (max-width: 768px) {
-  .section { min-height: 70vh; padding: 6rem 1.5rem; }
+  .section { height: 100vh; }
 
-  .heading { font-size: clamp(2.2rem, 8vw, 3.5rem); }
+  .detailWrap { width: 80px; height: 80px; }
+  .detailLabel { display: none; }
+
+  .editorial { padding: 0 1.5rem; }
+
+  .wordBlockRight { margin-right: 2%; }
+  .wordBlockRightBottom { margin-right: 5%; }
+
+  .wordTime { font-size: clamp(3.5rem, 18vw, 5rem); }
+  .wordIsAn { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+  .wordExpression {
+    font-size: clamp(2.8rem, 14vw, 4rem);
+    -webkit-text-stroke: 1px $color-red;
+  }
+  .wordOfPrecision { font-size: clamp(1.2rem, 5vw, 2rem); }
+}
+
+@media (max-width: 480px) {
+  .detailWrap { width: 55px; height: 55px; }
 }

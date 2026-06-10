@@ -21,8 +21,10 @@
 
 .canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  image-rendering: auto;
 }
 
 // ─── Frame Number Overlay ─────────────────────────────────────────────────────
@@ -96,7 +98,7 @@
 }
 
 .loaderIcon {
-  color: rgba($color-gold, 0.6);
+  color: rgba($color-silver, 0.6);
   margin-bottom: 1.5rem;
   animation: loaderPulse 2s ease-in-out infinite;
 
@@ -139,8 +141,57 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: $color-gold;
+  background: $color-silver;
   transition: width 0.15s linear;
+}
+
+// ─── Scroll Indicator ──────────────────────────────────────────────────────────
+
+.scrollIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+
+  &.scrollVisible {
+    opacity: 1;
+  }
+}
+
+.scrollArrow {
+  color: rgba($color-silver, 0.4);
+  animation: scrollFloat 2.4s ease-in-out infinite;
+}
+
+.scrollDot {
+  animation: scrollDotMove 2.4s ease-in-out infinite;
+}
+
+@keyframes scrollFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes scrollDotMove {
+  0%, 100% { opacity: 0.2; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(8px); }
+}
+
+.scrollText {
+  font-family: $font-serif;
+  font-size: clamp(0.85rem, 2.5vw, 1.25rem);
+  letter-spacing: 0.15em;
+  color: rgba($color-silver, 0.55);
+  font-weight: 300;
+  font-style: italic;
 }
 
 // ─── Diagnostics Panel ────────────────────────────────────────────────────────
@@ -149,8 +200,8 @@
   position: fixed;
   bottom: 1.5rem;
   left: 1.5rem;
-  background: rgba(5, 5, 5, 0.85);
-  border: 1px solid rgba($color-gold, 0.2);
+  background: rgba(7, 7, 9, 0.85);
+  border: 1px solid rgba($color-silver, 0.2);
   padding: 0.7rem 0.9rem;
   border-radius: 4px;
   z-index: 9999;
@@ -170,7 +221,7 @@
   pointer-events: none;
 
   .diagTitle {
-    color: $color-gold;
+    color: $color-silver;
     font-weight: 600;
     font-size: 0.5rem;
     letter-spacing: 0.15em;

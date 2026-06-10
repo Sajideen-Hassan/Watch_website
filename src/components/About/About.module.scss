@@ -3,114 +3,151 @@
 .section {
   position: relative;
   background: $color-bg;
-  padding: 8rem 4rem;
+  padding: 2rem 2rem 8rem;
   overflow: hidden;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
-// ─── Image ────────────────────────────────────────────────────────────────────
-
-.imageWrap {
-  position: relative;
+.bgGlow {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba($color-red, 0.04) 0%, transparent 70%);
+  pointer-events: none;
   will-change: transform, opacity;
 }
 
-.imageInner {
+// ─── Oversized Watch ───────────────────────────────────────────────────────────
+
+.watchWrap {
   position: relative;
-  overflow: hidden;
+  width: 115%;
+  max-width: 1200px;
+  margin: 0 -7.5%;
+  z-index: 1;
   will-change: transform;
 }
 
-.image {
+.watchInner {
+  position: relative;
   width: 100%;
-  height: 600px;
-  object-fit: cover;
+  overflow: hidden;
+  will-change: transform, opacity, filter;
 }
 
-.imageGlow {
+.watchImage {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  filter: grayscale(25%) contrast(1.08);
+  display: block;
+}
+
+.watchOverflow {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba($color-gold, 0.03) 0%, transparent 50%);
+  background: linear-gradient(to bottom, transparent 40%, rgba($color-bg, 0.9) 100%);
   pointer-events: none;
 }
 
 // ─── Content ──────────────────────────────────────────────────────────────────
 
 .content {
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  width: 100%;
+  margin-top: -4rem;
+  padding: 0 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 2.5rem;
 }
 
-.goldLine {
+.desc {
+  font-family: $font-serif;
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-weight: 300;
+  color: rgba($color-silver, 0.7);
+  text-align: center;
+  line-height: 1.7;
+  max-width: 580px;
+  will-change: transform, opacity;
+}
+
+.divider {
   width: 60px;
   height: 1px;
-  background: $color-gold;
-  will-change: transform, opacity;
+  background: rgba($color-silver, 0.2);
 }
 
-.heading {
-  font-family: $font-serif;
-  font-size: clamp(2.2rem, 4vw, 3.5rem);
-  font-weight: 300;
-  color: $color-off-white;
-  line-height: 1.15;
-  will-change: transform, opacity;
+// ─── Specifications ───────────────────────────────────────────────────────────
 
-  em {
-    font-style: italic;
-    color: $color-gold;
-  }
+.specs {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  flex-wrap: nowrap;
+  border-top: 1px solid rgba($color-silver, 0.08);
+  padding-top: 2.5rem;
 }
 
-.points {
-  list-style: none;
+.spec {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.point {
-  display: flex;
   align-items: center;
-  gap: 1rem;
-  font-family: $font-sans;
-  font-size: 0.88rem;
-  font-weight: 300;
-  color: $color-gray;
-  line-height: 1.5;
-  will-change: transform, opacity;
-
-  .pointBullet {
-    width: 4px;
-    height: 4px;
-    background: $color-gold;
-    border-radius: 50%;
-    flex-shrink: 0;
-    opacity: 0.5;
-  }
+  gap: 0.15rem;
+  text-align: center;
+  min-width: 110px;
+  padding: 0 1.5rem;
+  position: relative;
+  will-change: transform, opacity, filter;
 }
 
-// ─── Responsive ───────────────────────────────────────────────────────────────
+.specLabel {
+  font-family: $font-sans;
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba($color-silver, 0.3);
+  white-space: nowrap;
+}
+
+.specValue {
+  font-family: $font-serif;
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 600;
+  color: $color-silver;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  white-space: nowrap;
+}
 
 @media (max-width: 900px) {
-  .section { padding: 5rem 1.5rem; }
+  .section { padding: 1rem 1.5rem 5rem; }
 
-  .container {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
+  .watchWrap { width: 100%; margin: 0; }
+  .watchImage { height: 280px; }
 
-  .image { height: 350px; }
+  .content { margin-top: -2rem; padding: 0; gap: 2rem; }
 
-  .content { gap: 1rem; }
+  .specs { gap: 0; padding-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .spec { min-width: auto; padding: 0.25rem 0.75rem; }
+  .specValue { font-size: clamp(0.9rem, 3vw, 1.2rem); }
+  .specLabel { font-size: 0.5rem; }
+}
+
+@media (max-width: 500px) {
+  .watchImage { height: 220px; }
+  .specs { gap: 0.25rem; }
+  .specValue { font-size: clamp(0.8rem, 4vw, 1rem); }
+  .specLabel { font-size: 0.45rem; }
 }

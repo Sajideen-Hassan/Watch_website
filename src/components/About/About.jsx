@@ -5,53 +5,87 @@ import styles from './About.module.scss'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const points = [
-  'Swiss-inspired precision engineering',
-  'Scratch-resistant sapphire crystal',
-  '300-meter water resistance',
-  'Limited edition craftsmanship',
+const specs = [
+  { value: '42MM', label: 'Case Diameter' },
+  { value: 'AUTOMATIC', label: 'Movement' },
+  { value: 'SAPPHIRE', label: 'Crystal Glass' },
+  { value: '100M', label: 'Water Resistant' },
 ]
 
 export default function About() {
   const sectionRef = useRef(null)
-  const imageRef = useRef(null)
-  const imageWrapRef = useRef(null)
-  const headingRef = useRef(null)
-  const lineRef = useRef(null)
-  const pointsRef = useRef([])
+  const watchRef = useRef(null)
+  const watchInnerRef = useRef(null)
+  const descRef = useRef(null)
+  const specRefs = useRef([])
+  const bgGlowRef = useRef(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(imageWrapRef.current,
-        { x: -60, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1.4, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' } }
+      gsap.fromTo(watchInnerRef.current,
+        { scale: 1.4, opacity: 0, filter: 'blur(12px)' },
+        {
+          scale: 1,
+          opacity: 1,
+          filter: 'blur(0px)',
+          duration: 1.2,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 85%',
+          },
+        }
       )
 
-      gsap.to(imageRef.current, {
-        y: -40, ease: 'none',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top bottom', end: 'bottom top', scrub: 1.5 }
+      gsap.to(watchRef.current, {
+        y: -8,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: 1,
       })
 
-      gsap.fromTo(lineRef.current,
-        { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 1, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' }, delay: 0.2 }
+      gsap.fromTo(descRef.current,
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%',
+          },
+        }
       )
 
-      gsap.fromTo(headingRef.current,
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: headingRef.current, start: 'top 80%' }, delay: 0.3 }
-      )
-
-      pointsRef.current.forEach((pt, i) => {
-        if (!pt) return
-        gsap.fromTo(pt,
-          { x: -20, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.7, ease: 'power2.out',
-            scrollTrigger: { trigger: pt, start: 'top 90%' }, delay: i * 0.12 }
+      specRefs.current.forEach((spec, i) => {
+        if (!spec) return
+        gsap.fromTo(spec,
+          { y: 40, opacity: 0, filter: 'blur(4px)' },
+          {
+            y: 0,
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 0.6,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 65%',
+            },
+            delay: 0.2 + i * 0.1,
+          }
         )
+      })
+
+      gsap.to(bgGlowRef.current, {
+        scale: 1.1,
+        opacity: 0.5,
+        repeat: -1,
+        yoyo: true,
+        duration: 5,
+        ease: 'sine.inOut',
       })
     }, sectionRef)
 
@@ -60,28 +94,34 @@ export default function About() {
 
   return (
     <section id="about" ref={sectionRef} className={styles.section}>
-      <div className={styles.container}>
-        <div ref={imageWrapRef} className={styles.imageWrap}>
-          <div ref={imageRef} className={styles.imageInner}>
-            <img src="/images/watch-about.jpg" alt="REISER watch" className={styles.image} loading="lazy" />
-            <div className={styles.imageGlow} />
-          </div>
+      <div ref={bgGlowRef} className={styles.bgGlow} />
+
+      <div className={styles.watchWrap} ref={watchRef}>
+        <div ref={watchInnerRef} className={styles.watchInner}>
+          <img src="/images/watch-about.jpg" alt="REISER watch" className={styles.watchImage} loading="lazy" />
         </div>
+        <div className={styles.watchOverflow} />
+      </div>
 
-        <div className={styles.content}>
-          <div ref={lineRef} className={styles.goldLine} />
-          <h2 ref={headingRef} className={styles.heading}>
-            Precision<br /><em>Reimagined</em>
-          </h2>
+      <div className={styles.content}>
+        <p ref={descRef} className={styles.desc}>
+          Every REISER timepiece is assembled by hand in our Swiss atelier,
+          combining traditional craftsmanship with modern precision engineering.
+        </p>
 
-          <ul className={styles.points}>
-            {points.map((pt, i) => (
-              <li key={pt} ref={el => pointsRef.current[i] = el} className={styles.point}>
-                <span className={styles.pointBullet} />
-                <span>{pt}</span>
-              </li>
-            ))}
-          </ul>
+        <div className={styles.divider} />
+
+        <div className={styles.specs}>
+          {specs.map((s, i) => (
+            <div
+              key={s.value}
+              ref={(el) => { specRefs.current[i] = el }}
+              className={styles.spec}
+            >
+              <strong className={styles.specLabel}>{s.label}</strong>
+              <span className={styles.specValue}>{s.value}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

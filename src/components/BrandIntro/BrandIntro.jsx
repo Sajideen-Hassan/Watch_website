@@ -5,44 +5,47 @@ import styles from './BrandIntro.module.scss'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const watchDetails = [
+  { id: 1, x: 5, y: 15, pos: '50% 25%', scale: 2.2, label: 'Crown Detail' },
+  { id: 2, x: 80, y: 60, pos: '50% 65%', scale: 2.6, label: 'Dial Macro' },
+  { id: 3, x: 85, y: 8, pos: '25% 45%', scale: 1.9, label: 'Strap Texture' },
+  { id: 4, x: 8, y: 75, pos: '55% 35%', scale: 2.4, label: 'Movement Detail' },
+]
+
 export default function BrandIntro() {
   const sectionRef = useRef(null)
-  const headingRef = useRef(null)
-  const descRef = useRef(null)
-  const lineRef = useRef(null)
-  const glowRef = useRef(null)
+  const wordTexts = useRef([])
+  const detailWraps = useRef([])
+  const bgRef = useRef(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(glowRef.current,
-        { scale: 0.8, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 2.5, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' } }
-      )
-
-      gsap.to(glowRef.current, {
-        scale: 1.15, opacity: 0.7,
-        repeat: -1, yoyo: true, duration: 4, ease: 'sine.inOut',
+      wordTexts.current.forEach((el, i) => {
+        if (!el) return
+        gsap.fromTo(el,
+          { y: '110%', rotateX: 25 },
+          {
+            y: '0%',
+            rotateX: 0,
+            duration: 0.8,
+            ease: 'power4.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+            },
+            delay: i * 0.12,
+          }
+        )
       })
 
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' }
+      gsap.to(bgRef.current, {
+        scale: 1.05,
+        opacity: 0.7,
+        repeat: -1,
+        yoyo: true,
+        duration: 6,
+        ease: 'sine.inOut',
       })
-
-      tl.fromTo(lineRef.current,
-        { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 1, duration: 1.2, ease: 'power3.out' }
-      )
-      tl.fromTo(headingRef.current,
-        { y: 50, opacity: 0, filter: 'blur(6px)' },
-        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.4, ease: 'power3.out' },
-        '-=0.6'
-      )
-      tl.fromTo(descRef.current,
-        { y: 25, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, ease: 'power2.out' },
-        '-=0.5'
-      )
     }, sectionRef)
 
     return () => ctx.revert()
@@ -50,17 +53,60 @@ export default function BrandIntro() {
 
   return (
     <section id="intro" ref={sectionRef} className={styles.section}>
-      <div ref={glowRef} className={styles.glow} />
-      <div className={styles.bgGradient} />
+      <div ref={bgRef} className={styles.bgGlow} />
+      <div className={styles.bgGradients} />
 
-      <div className={styles.content}>
-        <div ref={lineRef} className={styles.goldLine} />
-        <h2 ref={headingRef} className={styles.heading}>
-          Time, reimagined
-        </h2>
-        <p ref={descRef} className={styles.desc}>
-          Where Swiss precision meets contemporary elegance.
-        </p>
+      {watchDetails.map((d, i) => (
+        <div
+          key={d.id}
+          ref={(el) => { detailWraps.current[i] = el }}
+          className={styles.detailWrap}
+          style={{ top: `${d.y}%`, left: `${d.x}%` }}
+        >
+          <div className={styles.detailImage}>
+            <img
+              src="/images/watch-about.jpg"
+              alt=""
+              aria-hidden="true"
+              style={{
+                objectPosition: d.pos,
+                transform: `scale(${d.scale})`,
+              }}
+            />
+          </div>
+          <span className={styles.detailLabel}>{d.label}</span>
+        </div>
+      ))}
+
+      <div className={styles.editorial}>
+        <div className={`${styles.wordBlock} ${styles.wordBlockFirst}`}>
+          <div className={styles.wordMask}>
+            <span ref={(el) => { wordTexts.current[0] = el }} className={`${styles.word} ${styles.wordTime}`}>
+              TIME
+            </span>
+          </div>
+        </div>
+        <div className={`${styles.wordBlock} ${styles.wordBlockRight}`}>
+          <div className={styles.wordMask}>
+            <span ref={(el) => { wordTexts.current[1] = el }} className={`${styles.word} ${styles.wordIsAn}`}>
+              IS AN
+            </span>
+          </div>
+        </div>
+        <div className={`${styles.wordBlock} ${styles.wordBlockCenter}`}>
+          <div className={styles.wordMask}>
+            <span ref={(el) => { wordTexts.current[2] = el }} className={`${styles.word} ${styles.wordExpression}`}>
+              EXPRESSION
+            </span>
+          </div>
+        </div>
+        <div className={`${styles.wordBlock} ${styles.wordBlockRightBottom}`}>
+          <div className={styles.wordMask}>
+            <span ref={(el) => { wordTexts.current[3] = el }} className={`${styles.word} ${styles.wordOfPrecision}`}>
+              OF PRECISION
+            </span>
+          </div>
+        </div>
       </div>
     </section>
   )

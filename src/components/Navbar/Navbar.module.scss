@@ -2,57 +2,67 @@
 
 .navbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-40px);
+  width: calc(100% - 32px);
+  max-width: 1200px;
   z-index: $z-navbar;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(7, 7, 9, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(214, 210, 196, 0.08);
+  border-radius: 12px;
+  transition: backdrop-filter 0.4s ease;
+
+  &.scrolled {
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+}
+
+.navInner {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 4rem;
-  transition: background 0.6s ease, backdrop-filter 0.6s ease, padding 0.4s ease;
+  padding: 0 2rem;
+  min-height: 80px;
+  transition: min-height 0.4s ease;
 
-  &.scrolled {
-    background: rgba(5, 5, 5, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 1rem 4rem;
-    border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+  .scrolled & {
+    min-height: 60px;
   }
 }
 
 .logo {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-  opacity: 0;
-}
-
-.logoText {
   font-family: $font-serif;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 600;
   letter-spacing: 0.4em;
-  color: $color-gold;
+  color: $color-silver;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
   text-transform: uppercase;
-}
+  transition: color 0.3s ease;
 
-.logoSub {
-  font-family: $font-sans;
-  font-size: 0.5rem;
-  letter-spacing: 0.35em;
-  color: $color-gray;
-  text-transform: uppercase;
-  margin-top: 2px;
+  &:hover {
+    color: $color-red;
+  }
 }
 
 .navLinks {
-  list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 2.5rem;
-
-  li { opacity: 0; }
+  list-style: none;
 }
 
 .navLink {
@@ -61,17 +71,28 @@
   font-size: 0.7rem;
   font-weight: 400;
   letter-spacing: 0.2em;
-  color: rgba($color-off-white, 0.5);
+  color: rgba(237, 237, 237, 0.5);
   text-transform: uppercase;
+  background: none;
+  border: none;
+  cursor: pointer;
   padding: 0.25rem 0;
   transition: color 0.3s ease;
 
-  &:hover { color: $color-gold; }
-  &:hover .navUnderline { transform: scaleX(1); }
+  &:hover {
+    color: $color-red;
+  }
+
+  &:hover .navUnderline {
+    transform: scaleX(1);
+  }
 
   &.active {
-    color: $color-gold;
-    .navUnderline { transform: scaleX(1); }
+    color: $color-red;
+
+    .navUnderline {
+      transform: scaleX(1);
+    }
   }
 }
 
@@ -81,7 +102,7 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background: $color-gold;
+  background: $color-red;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.4s $transition-luxury;
@@ -90,26 +111,164 @@
 .ctaBtn {
   font-family: $font-sans;
   font-size: 0.7rem;
+  font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: $color-bg;
-  background: $color-gold;
-  padding: 0.6rem 1.6rem;
-  transition: background 0.3s ease, transform 0.3s ease;
+  background: $color-red;
+  border: none;
+  padding: 0.5rem 1.4rem;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background: $color-gold-light;
-    transform: translateY(-1px);
+    background: $color-red-light;
+    box-shadow: 0 4px 20px rgba(142, 44, 44, 0.3);
   }
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  span {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: $color-silver;
+    border-radius: 1px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  &.hamburgerOpen {
+    span:nth-child(1) {
+      transform: rotate(45deg);
+    }
+    span:nth-child(2) {
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+// ─── Full-Screen Overlay ──────────────────────────────────────────────────────
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: $z-navbar - 1;
+  background: rgba(7, 7, 9, 0.97);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+
+  &.overlayOpen {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.overlayClose {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    position: absolute;
+    width: 22px;
+    height: 1.5px;
+    background: $color-silver;
+    border-radius: 1px;
+
+    &:nth-child(1) { transform: rotate(45deg); }
+    &:nth-child(2) { transform: rotate(-45deg); }
+  }
+}
+
+.overlayLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.overlayLink {
+  font-family: $font-serif;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 300;
+  color: rgba(214, 210, 196, 0.5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0;
+  transition: color 0.3s ease;
+  will-change: transform, opacity;
+
+  &:hover {
+    color: $color-silver;
+  }
+}
+
+.overlayActive {
+  color: $color-red;
 }
 
 @media (max-width: 768px) {
   .navbar {
-    padding: 1.2rem 1.5rem;
-    &.scrolled { padding: 0.8rem 1.5rem; }
+    top: 8px;
+    width: calc(100% - 16px);
   }
 
-  .navLinks { display: none; }
+  .navInner {
+    min-height: 64px;
+    padding: 0 1.25rem;
 
-  .ctaBtn { padding: 0.5rem 1.2rem; }
+    .scrolled & {
+      min-height: 52px;
+    }
+  }
+
+  .logo {
+    font-size: 1.1rem;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .ctaBtn {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
 }
