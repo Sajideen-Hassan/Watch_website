@@ -1,9 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './BrandIntro.module.scss'
-
-gsap.registerPlugin(ScrollTrigger)
+import OptimizedImage from '../OptimizedImage'
 
 const watchDetails = [
   { id: 1, x: 5, y: 15, pos: '50% 25%', scale: 2.2, label: 'Crown Detail' },
@@ -24,26 +22,15 @@ export default function BrandIntro() {
         gsap.fromTo(el,
           { y: '110%', rotateX: 25 },
           {
-            y: '0%',
-            rotateX: 0,
-            duration: 0.8,
-            ease: 'power4.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 80%',
-            },
+            y: '0%', rotateX: 0, duration: 0.8, ease: 'power4.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
             delay: i * 0.12,
           }
         )
       })
 
       gsap.to(bgRef.current, {
-        scale: 1.05,
-        opacity: 0.7,
-        repeat: -1,
-        yoyo: true,
-        duration: 6,
-        ease: 'sine.inOut',
+        scale: 1.05, opacity: 0.7, repeat: -1, yoyo: true, duration: 6, ease: 'sine.inOut',
       })
     }, sectionRef)
 
@@ -56,21 +43,15 @@ export default function BrandIntro() {
       <div className={styles.bgGradients} />
 
       {watchDetails.map((d) => (
-        <div
-          key={d.id}
-          className={styles.detailWrap}
-          style={{ top: `${d.y}%`, left: `${d.x}%` }}
-        >
+        <div key={d.id} className={styles.detailWrap} style={{ top: `${d.y}%`, left: `${d.x}%` }}>
           <div className={styles.detailImage}>
-            <img
-              src="/images/watch-about.jpg"
+            <OptimizedImage
+              path="about-watch.jpg"
               alt=""
               aria-hidden="true"
-              loading="lazy"
-              style={{
-                objectPosition: d.pos,
-                transform: `scale(${d.scale})`,
-              }}
+              width={1024}
+              height={1024}
+              style={{ objectPosition: d.pos, transform: `scale(${d.scale})` }}
             />
           </div>
           <span className={styles.detailLabel}>{d.label}</span>
@@ -80,30 +61,22 @@ export default function BrandIntro() {
       <div className={styles.editorial}>
         <div className={`${styles.wordBlock} ${styles.wordBlockFirst}`}>
           <div className={styles.wordMask}>
-            <span ref={(el) => { wordTexts.current[0] = el }} className={`${styles.word} ${styles.wordTime}`}>
-              TIME
-            </span>
+            <span ref={(el) => { wordTexts.current[0] = el }} className={`${styles.word} ${styles.wordTime}`}>TIME</span>
           </div>
         </div>
         <div className={`${styles.wordBlock} ${styles.wordBlockRight}`}>
           <div className={styles.wordMask}>
-            <span ref={(el) => { wordTexts.current[1] = el }} className={`${styles.word} ${styles.wordIsAn}`}>
-              IS AN
-            </span>
+            <span ref={(el) => { wordTexts.current[1] = el }} className={`${styles.word} ${styles.wordIsAn}`}>IS AN</span>
           </div>
         </div>
         <div className={`${styles.wordBlock} ${styles.wordBlockCenter}`}>
           <div className={styles.wordMask}>
-            <span ref={(el) => { wordTexts.current[2] = el }} className={`${styles.word} ${styles.wordExpression}`}>
-              EXPRESSION
-            </span>
+            <span ref={(el) => { wordTexts.current[2] = el }} className={`${styles.word} ${styles.wordExpression}`}>EXPRESSION</span>
           </div>
         </div>
         <div className={`${styles.wordBlock} ${styles.wordBlockRightBottom}`}>
           <div className={styles.wordMask}>
-            <span ref={(el) => { wordTexts.current[3] = el }} className={`${styles.word} ${styles.wordOfPrecision}`}>
-              OF PRECISION
-            </span>
+            <span ref={(el) => { wordTexts.current[3] = el }} className={`${styles.word} ${styles.wordOfPrecision}`}>OF PRECISION</span>
           </div>
         </div>
       </div>

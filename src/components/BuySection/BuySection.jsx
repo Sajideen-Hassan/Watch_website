@@ -3,7 +3,17 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './BuySection.module.scss'
 
-gsap.registerPlugin(ScrollTrigger)
+function handleBuyHover(e) {
+  const btn = e.currentTarget
+  const rect = btn.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  gsap.to(btn, {
+    '--mx': `${x}px`,
+    '--my': `${y}px`,
+    duration: 0.3,
+  })
+}
 
 export default function BuySection() {
   const sectionRef = useRef(null)
@@ -118,18 +128,6 @@ export default function BuySection() {
       gsap.ticker.remove(trackMouse)
     }
   }, [handleMouseMove])
-
-  const handleBuyHover = (e) => {
-    const btn = e.currentTarget
-    const rect = btn.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    gsap.to(btn, {
-      '--mx': `${x}px`,
-      '--my': `${y}px`,
-      duration: 0.3,
-    })
-  }
 
   return (
     <section

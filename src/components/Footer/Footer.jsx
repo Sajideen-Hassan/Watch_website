@@ -1,9 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './Footer.module.scss'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const quickLinks = ['Home', 'About', 'Features', 'Buy']
 const socials = [
@@ -13,20 +10,26 @@ const socials = [
   { name: 'YouTube', href: '#' },
 ]
 
+const currentYear = new Date().getFullYear()
+
 export default function Footer() {
   const footerRef = useRef(null)
 
   useEffect(() => {
-    gsap.fromTo(footerRef.current,
-      { y: 40, opacity: 0 },
-      {
-        y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: 'top 90%',
+    const ctx = gsap.context(() => {
+      gsap.fromTo(footerRef.current,
+        { y: 40, opacity: 0 },
+        {
+          y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: 'top 90%',
+          }
         }
-      }
-    )
+      )
+    }, footerRef)
+
+    return () => ctx.revert()
   }, [])
 
   return (
@@ -34,7 +37,6 @@ export default function Footer() {
       <div className={styles.topLine} />
 
       <div className={styles.container}>
-        {/* Brand */}
         <div className={styles.brand}>
           <div className={styles.logo}>
             <span className={styles.logoText}>REISER</span>
@@ -53,7 +55,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Quick Links */}
         <div className={styles.linksCol}>
           <h4 className={styles.colTitle}>Navigation</h4>
           <ul className={styles.linksList}>
@@ -65,7 +66,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact */}
         <div className={styles.linksCol}>
           <h4 className={styles.colTitle}>Boutiques</h4>
           <ul className={styles.linksList}>
@@ -76,7 +76,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Newsletter */}
         <div className={styles.newsletter}>
           <h4 className={styles.colTitle}>Stay Updated</h4>
           <p className={styles.newsletterDesc}>
@@ -89,15 +88,15 @@ export default function Footer() {
               className={styles.emailInput}
               aria-label="Email address"
             />
-            <button className={styles.subscribeBtn}>→</button>
+            <button type="button" className={styles.subscribeBtn}>→</button>
           </div>
         </div>
       </div>
 
       <div className={styles.bottom}>
-        <p className={styles.copyright}>
-          © {new Date().getFullYear()} REISER Timepieces. All rights reserved.
-        </p>
+          <p className={styles.copyright}>
+            © {currentYear} REISER Timepieces. All rights reserved.
+          </p>
         <div className={styles.bottomLinks}>
           <a href="#" className={styles.bottomLink}>Privacy Policy</a>
           <span className={styles.dot}>·</span>

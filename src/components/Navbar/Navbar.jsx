@@ -3,8 +3,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './Navbar.module.scss'
 
-gsap.registerPlugin(ScrollTrigger)
-
 const navLinks = [
   { label: 'Intro', target: 'intro' },
   { label: 'About', target: 'about' },
